@@ -1,0 +1,21 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Contador diário de conversões grátis. Só o backend (Admin SDK, que
+    // ignora estas regras) lê/escreve aqui — o cliente nunca acessa direto,
+    // pra impedir que alguém zere o próprio contador pelo navegador.
+    match /usage/{usageId} {
+      allow read, write: if false;
+    }
+
+    // Perfil/plano do usuário: ele pode ler o próprio documento (pra saber
+    // se está no plano pago), mas só o backend escreve (após confirmar o
+    // pagamento PIX via webhook do Mercado Pago).
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+  }
+}

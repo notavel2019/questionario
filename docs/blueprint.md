@@ -1,18 +1,37 @@
-# **App Name**: Notável Briefing
+# **App Name**: Conversor de Etiquetas — Notável
 
-## Core Features:
+Clone funcional do EtiqJá: converte etiquetas de marketplace (Shopee, Mercado
+Livre, TikTok Shop) para PDF pronto pra impressora térmica 10×15cm.
 
-- Styled Briefing Form: Present a clean and modern form for collecting website briefing information, similar to the visual aesthetic of Notável's website.
-- Comprehensive Data Input: Enable users to fill out the form with essential information for creating their web page, covering company details, client needs, and visual identity.
-- WhatsApp Submission: Allow users to submit the filled-out form data directly to a specified WhatsApp number.
-- AI Assisted Input Review: Generate a summary of the input in order to populate the submission with extra tool-provided insight.
+## Core Features
 
-## Style Guidelines:
+- **Shopee**: ZPL (.zip/.txt ou colado) → PDF 10×15cm, com SKU/variação/quantidade
+  impressos quando há planilha de lista de embalagem, e lista de separação
+  (picking list) agrupada por SKU.
+- **Mercado Livre**: PDF A4 de 3 colunas (lista + etiqueta + DANFE) → 1 pedido
+  por página 10×15cm.
+- **Full ML**: ZPL da etiqueta pequena (8×2,5cm) → PDF alinhado para
+  impressora de etiqueta dedicada.
+- **TikTok Shop**: casa a NF-e com a etiqueta certa pelo código de rastreio
+  (não pela ordem do arquivo) e monta 1 pedido por página.
+- **Lista de separação**: gera picking list a partir de uma planilha avulsa.
+- Numeração opcional do lote (`N/Total`), sem numerar a NF.
+- Freemium: 3 conversões grátis/dia por usuário (contador Firestore,
+  reseta à meia-noite America/Sao_Paulo), plano ilimitado via PIX.
 
-- Primary color: Use a vibrant blue (#29ABE2), reflecting Notável's branding, to create a sense of trust and innovation.
-- Background color: A light, desaturated blue (#E5F6FD) for a clean and airy feel, aligning with modern web design trends.
-- Accent color: A complementary yellow (#F9A825) to highlight key elements and call-to-action buttons.
-- Body and headline font: Use 'Inter', a sans-serif font, for clear and accessible typography. Note: currently only Google Fonts are supported.
-- Incorporate simple, outline-style icons in the primary blue color to enhance visual appeal and guide users through the form.
-- Employ a single-column layout with generous spacing and clear section headings to ensure ease of use and readability.
-- Subtle transitions and animations to provide feedback on user interactions, such as form submissions or field focus.
+## Style Guidelines
+
+Reaproveita o design system já usado nos produtos Notável (este mesmo
+repositório): tipografia Inter, cor primária azul `hsl(221 83% 53%)`, acento
+roxo `hsl(256 65% 61%)`, cantos arredondados (`radius: 0.8rem`), componentes
+shadcn/ui, cabeçalho escuro com a logo Notável. Mesma paleta usada em
+bio.notavel.com.br.
+
+## Stack
+
+- Next.js 14 (App Router) + TypeScript + Tailwind + shadcn/ui
+- `pdf-lib` (composição/recorte de PDF), `pdfjs-dist` (extração de texto para
+  casar rastreio), `bwip-js` (geração de código de barras/QR), `xlsx`
+  (planilha de embalagem), `jszip` (extrair .txt do .zip da Shopee)
+- Firebase Auth + Firestore (contador de uso e plano) + Firebase App Hosting
+- Mercado Pago (PIX) para cobrança do plano ilimitado

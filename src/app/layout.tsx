@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'Notável Briefing',
-  description: 'Formulário de briefing para criação de páginas web.',
+  title: 'Conversor de Etiquetas | Notável',
+  description: 'Converta etiquetas da Shopee, Mercado Livre e TikTok Shop em PDF pronto pra impressora térmica 10x15cm.',
 };
 
 export default function RootLayout({
