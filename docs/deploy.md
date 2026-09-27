@@ -55,7 +55,7 @@ orçamento. Para manter isso, evite:
 4. Copiar `.env.example` para `.env.local` e preencher:
    - As chaves `NEXT_PUBLIC_FIREBASE_*` (Configurações do projeto > Geral > apps web).
    - `FIREBASE_SERVICE_ACCOUNT_KEY` (Configurações do projeto > Contas de serviço).
-   - `MERCADOPAGO_ACCESS_TOKEN` quando for ligar a cobrança PIX de verdade.
+   - `NEXT_PUBLIC_CAKTO_CHECKOUT_URL` e `CAKTO_WEBHOOK_SECRET` quando for ligar a cobrança de verdade (veja abaixo).
 5. No console do Firebase, criar o backend de **App Hosting** apontando pro
    repositório Git (branch de produção) — o próprio `apphosting.yaml` já
    define `maxInstances: 1`.
@@ -71,9 +71,34 @@ usa Firestore com transação atômica — funciona em produção assim que
 ambiente de desenvolvimento local), o limite fica desativado de propósito,
 pra não travar quem está codando.
 
-A cobrança PIX (`src/app/api/billing/pix/route.ts`) usa a API do Mercado
-Pago. Sem `MERCADOPAGO_ACCESS_TOKEN`, o endpoint responde 501 avisando que
-a cobrança ainda não foi ligada — isso é intencional: o checkout completo
-(confirmação de pagamento via webhook, liberação do plano no Firestore)
-precisa das credenciais reais da conta Mercado Pago da Notável antes de ir
-pra produção.
+## Cobrança via Cakto
+
+A assinatura do plano ilimitado usa a **Cakto** (checkout hospedado, não uma
+API de cobrança direta como o Mercado Pago):
+
+1. Crie o produto/oferta "Plano ilimitado" no painel da Cakto e copie o link
+   de checkout gerado.
+2. Configure `NEXT_PUBLIC_CAKTO_CHECKOUT_URL` com esse link. O botão
+   "Assinar na Cakto" (`src/components/converter/pricing-modal.tsx`) abre
+   esse link numa nova aba — sem ele configurado, o botão fica desabilitado.
+3. No painel da Cakto, configure a **URL de webhook/postback** do produto
+   apontando para `https://SEU-DOMINIO/api/billing/webhook/cakto`. É esse
+   webhook que confirma o pagamento e libera o plano no Firestore
+   (`src/app/api/billing/webhook/cakto/route.ts`).
+4. Se a Cakto oferecer um segredo/token pra validar o webhook, coloque em
+   `CAKTO_WEBHOOK_SECRET` — o endpoint aceita tanto no header `x-cakto-secret`
+   quanto na query string `?secret=`.
+5. **Importante — verifique antes de ir pra produção:** não conseguimos
+   acessar a documentação da Cakto neste ambiente (rede bloqueada pra
+   `cakto.com.br`), então o webhook foi implementado seguindo o padrão comum
+   dessas plataformas (Kiwify/Hotmart/Eduzz): o pagamento é considerado
+   aprovado quando o campo de status/evento do payload contém algo como
+   `paid`/`approved`/`completed`, e o comprador é identificado pelo e-mail
+   (`email`, `customer.email` ou `buyer.email` no corpo da requisição). Ao
+   receber o primeiro webhook real, confira o payload nos logs do servidor e
+   ajuste as listas `PAID_STATUSES`/`CANCELED_STATUSES` e os caminhos em
+   `extractField` na rota se os nomes de campo forem diferentes.
+6. O comprador precisa ter uma conta no app (login por e-mail/senha) com o
+   **mesmo e-mail** usado na compra na Cakto — é assim que o webhook associa
+   o pagamento à conta certa. Se o e-mail não bater, o webhook responde
+   avisando isso (não falha silenciosamente).

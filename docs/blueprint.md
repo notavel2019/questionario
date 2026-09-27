@@ -34,4 +34,4 @@ bio.notavel.com.br.
   casar rastreio), `bwip-js` (geração de código de barras/QR), `xlsx`
   (planilha de embalagem), `jszip` (extrair .txt do .zip da Shopee)
 - Firebase Auth + Firestore (contador de uso e plano) + Firebase App Hosting
-- Mercado Pago (PIX) para cobrança do plano ilimitado
+- Cakto (checkout hospedado + webhook) para cobrança do plano ilimitado

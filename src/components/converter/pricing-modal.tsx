@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CheckCircle2, Clock, Sparkles } from 'lucide-react';
+import { CheckCircle2, Clock, ExternalLink, Sparkles } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -11,6 +11,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { getCaktoCheckoutUrl } from '@/lib/billing/cakto';
+import { useAuth } from '@/hooks/use-auth';
 
 function useCountdown(target: string | null) {
   const [label, setLabel] = useState('');
@@ -48,32 +50,8 @@ export function PricingModal({
   reason: 'limit' | 'upgrade';
 }) {
   const countdown = useCountdown(resetAt);
-  const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const [pix, setPix] = useState<{ qrCode?: string; ticketUrl?: string } | null>(null);
-
-  async function handleSubscribe() {
-    setLoading(true);
-    setCheckoutError(null);
-    try {
-      const res = await fetch('/api/billing/pix', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, isFirstSubscription: true }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setCheckoutError(data.message ?? 'Não foi possível iniciar a assinatura agora.');
-        return;
-      }
-      setPix({ qrCode: data.qrCode, ticketUrl: data.ticketUrl });
-    } catch {
-      setCheckoutError('Falha de conexão. Tente novamente.');
-    } finally {
-      setLoading(false);
-    }
-  }
+  const { user } = useAuth();
+  const checkoutUrl = getCaktoCheckoutUrl();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -104,7 +82,9 @@ export function PricingModal({
               R$ 9,90 <span className="text-sm font-normal text-muted-foreground">na 1ª assinatura</span>
             </span>
           </div>
-          <p className="text-xs text-muted-foreground">Depois, R$ 19,90/mês. Cancele quando quiser. Pagamento via PIX.</p>
+          <p className="text-xs text-muted-foreground">
+            Depois, R$ 19,90/mês. Cancele quando quiser. Pagamento via PIX, cartão ou boleto.
+          </p>
           <ul className="mt-2 space-y-1 text-sm">
             {['Conversões ilimitadas todos os dias', 'Histórico de conversões', 'Suporte prioritário'].map((f) => (
               <li key={f} className="flex items-center gap-2">
@@ -114,33 +94,32 @@ export function PricingModal({
           </ul>
         </div>
 
-        {!pix ? (
-          <div className="space-y-2">
-            <input
-              type="email"
-              placeholder="seu@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            />
-            {checkoutError && <p className="text-sm text-destructive">{checkoutError}</p>}
-          </div>
-        ) : (
-          <div className="space-y-2 text-center">
-            <p className="text-sm">Escaneie o QR Code do PIX ou copie o código para pagar:</p>
-            {pix.qrCode && (
-              <code className="block max-h-24 overflow-auto rounded bg-muted p-2 text-left text-xs break-all">
-                {pix.qrCode}
-              </code>
-            )}
-          </div>
+        {user?.email && (
+          <p className="text-xs text-muted-foreground">
+            Use o e-mail <span className="font-medium text-foreground">{user.email}</span> na hora de pagar — é
+            assim que liberamos o plano na sua conta automaticamente.
+          </p>
+        )}
+
+        {!checkoutUrl && (
+          <p className="text-sm text-destructive">
+            Checkout ainda não configurado. Defina NEXT_PUBLIC_CAKTO_CHECKOUT_URL com o link do produto na Cakto.
+          </p>
         )}
 
         <DialogFooter>
-          {!pix && (
-            <Button onClick={handleSubscribe} disabled={loading || !email} className="w-full gap-2">
+          {checkoutUrl ? (
+            <Button asChild className="w-full gap-2">
+              <a href={checkoutUrl} target="_blank" rel="noopener noreferrer">
+                <Sparkles className="h-4 w-4" />
+                Assinar na Cakto
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </Button>
+          ) : (
+            <Button disabled className="w-full gap-2">
               <Sparkles className="h-4 w-4" />
-              {loading ? 'Gerando cobrança PIX...' : 'Assinar com PIX'}
+              Assinar na Cakto
             </Button>
           )}
         </DialogFooter>
