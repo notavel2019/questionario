@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { gscQueries, keywords, apiUsage } from '@/lib/demo-data';
+import { keywords, apiUsage } from '@/lib/demo-data';
+import { getGscData } from '@/lib/gsc';
 
-export default function Overview() {
+export default async function Overview() {
+  const gsc = await getGscData();
+  const gscQueries = gsc.rows;
   const nearly = gscQueries.filter((q) => q.position > 10 && q.position <= 20).length;
   const clicks = gscQueries.reduce((s, q) => s + q.clicks, 0);
   const cards = [

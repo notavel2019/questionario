@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { gscQueries, keywords } from '@/lib/demo-data';
+import { keywords } from '@/lib/demo-data';
+import { getGscData } from '@/lib/gsc';
 
-export default function PlanPage() {
+export default async function PlanPage() {
+  const gscQueries = (await getGscData()).rows;
   const tasks = [
     ...gscQueries
       .filter((q) => q.position > 10 && q.position <= 20)
@@ -23,7 +25,7 @@ export default function PlanPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Plano de ação</h1>
-        <p className="text-muted-foreground">Tarefas ordenadas por impacto. A geração com Claude entra na próxima etapa.</p>
+        <p className="text-muted-foreground">Tarefas ordenadas por impacto, a partir dos seus dados do Search Console.</p>
       </div>
       {tasks.map((t, i) => (
         <Card key={t.title}>
