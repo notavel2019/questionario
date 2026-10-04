@@ -25,3 +25,16 @@ export const keywords: KeywordRow[] = [
 ];
 
 export const apiUsage = { spent: 3.42, budget: 20 };
+
+export type Review = {
+  id: string; author: string; stars: 1 | 2 | 3 | 4 | 5; text: string; date: string; reply?: string;
+};
+
+// Demonstração. Substituir pela API do Google Business Profile após aprovação de acesso.
+export const reviews: Review[] = [
+  { id: 'r1', author: 'Mariana Costa', stars: 5, text: 'Atendimento excelente, o site ficou lindo e entregaram antes do prazo!', date: '2026-09-28' },
+  { id: 'r2', author: 'João Pereira', stars: 2, text: 'O resultado ficou bom, mas demoraram muito para responder minhas mensagens.', date: '2026-09-25' },
+  { id: 'r3', author: 'Ana Souza', stars: 4, text: 'Gostei do trabalho. Só achei o preço um pouco alto.', date: '2026-09-20', reply: 'Obrigado, Ana! Ficamos felizes com o seu retorno.' },
+  { id: 'r4', author: 'Carlos Lima', stars: 1, text: 'Não fiquei satisfeito com a comunicação durante o projeto.', date: '2026-09-12' },
+  { id: 'r5', author: 'Beatriz Alves', stars: 5, text: 'Subimos na busca do Google em poucas semanas. Recomendo!', date: '2026-09-05', reply: 'Que alegria, Beatriz! Obrigado pela confiança.' },
+];

@@ -40,5 +40,6 @@ export const panelNav = [
   { href: '/painel/gsc', label: 'Meu site no Google' },
   { href: '/painel/palavras', label: 'Palavras-chave' },
   { href: '/painel/geo', label: 'Nota GEO' },
+  { href: '/painel/avaliacoes', label: 'Avaliações' },
   { href: '/painel/plano', label: 'Plano de ação' },
 ];
