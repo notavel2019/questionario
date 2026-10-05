@@ -29,3 +29,13 @@
 - [ ] Manter o formulário de briefing em `/briefing` ou remover.
 - [ ] Postagens do Google Meu Negócio: quer a tela de demonstração agora?
 - [ ] Onde publicar o app (Firebase App Hosting já tem `apphosting.yaml`, ou outro).
+
+## Publicação no Firebase App Hosting (seo.notavel.com.br)
+- [ ] Ter um backend de App Hosting no projeto Firebase, ligado a este repositório do GitHub.
+- [ ] Criar os 3 segredos (o comando pergunta o valor e oferece conceder acesso ao backend; responda sim):
+  - `firebase apphosting:secrets:set GOOGLE_CLIENT_ID`
+  - `firebase apphosting:secrets:set GOOGLE_CLIENT_SECRET`
+  - `firebase apphosting:secrets:set SESSION_SECRET` (valor: `openssl rand -hex 32`)
+- [ ] Juntar a branch `ccr-7eb87c9e-9rq065` à `main` (ou definir esta como a branch ao vivo do backend) e aguardar o rollout.
+- [ ] Console Firebase > App Hosting > Configurações > Domínios: adicionar `seo.notavel.com.br` e criar no DNS os registros que o Firebase mostrar.
+- [ ] No Google Cloud, conferir o URI `https://seo.notavel.com.br/api/auth/google/callback` nas credenciais OAuth.

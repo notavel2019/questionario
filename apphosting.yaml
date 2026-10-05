@@ -5,3 +5,22 @@ runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
   maxInstances: 1
+
+env:
+  - variable: APP_URL
+    value: https://seo.notavel.com.br
+    availability:
+      - RUNTIME
+  # Segredos: criar com `firebase apphosting:secrets:set <NOME>` (ver docs/pendencias-usuario.md)
+  - variable: GOOGLE_CLIENT_ID
+    secret: GOOGLE_CLIENT_ID
+    availability:
+      - RUNTIME
+  - variable: GOOGLE_CLIENT_SECRET
+    secret: GOOGLE_CLIENT_SECRET
+    availability:
+      - RUNTIME
+  - variable: SESSION_SECRET
+    secret: SESSION_SECRET
+    availability:
+      - RUNTIME
