@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'Notável Briefing',
-  description: 'Formulário de briefing para criação de páginas web.',
+  title: 'PrimeiraPágina — SEO e GEO para o seu site',
+  description: 'Dados do Google, palavras-chave, concorrentes e nota GEO num painel só.',
 };
 
 export default function RootLayout({
