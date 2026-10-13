@@ -1,0 +1,21 @@
+# cuts from events final.mp4.events.json (time s, frame, timecode, source)
+0.300	frame 9	0:00.30	event show '#w1'
+1.500	frame 45	0:01.50	event show '#w2'
+2.800	frame 84	0:02.80	event show '#w3'
+4.200	frame 126	0:04.20	event show '#micro'
+6.000	frame 180	0:06.00	event show '#clock'
+8.000	frame 240	0:08.00	event show '.shard'
+10.000	frame 300	0:10.00	event show '#s2'
+22.000	frame 660	0:22.00	event show '#s3'
+23.000	frame 690	0:23.00	event show '#inv'
+38.000	frame 1140	0:38.00	event show '#s4'
+43.667	frame 1310	0:43.67	event show 'circle'
+44.333	frame 1330	0:44.33	event show 'circle'
+45.000	frame 1350	0:45.00	event show 'circle'
+45.667	frame 1370	0:45.67	event show 'circle'
+46.333	frame 1390	0:46.33	event show 'circle'
+52.000	frame 1560	0:52.00	event show '#s5'
+# detected but not in events:
+1.200	frame 36	0:01.20	pixel spike x38.5 diff 12.6 corr 0.16 scene 0.11
+2.400	frame 72	0:02.40	pixel spike x26.7 diff 8.6 corr 0.27 scene 0.07
+3.800	frame 114	0:03.80	scene 0.12 + corr 0.17 spike x43.3

@@ -1,0 +1,278 @@
+[
+ {
+  "t": 0,
+  "frame": 0,
+  "type": "show",
+  "label": "#s1"
+ },
+ {
+  "t": 0.3,
+  "frame": 9,
+  "type": "show",
+  "label": "#w1"
+ },
+ {
+  "t": 1.5,
+  "frame": 45,
+  "type": "show",
+  "label": "#w2"
+ },
+ {
+  "t": 2.8,
+  "frame": 84,
+  "type": "show",
+  "label": "#w3"
+ },
+ {
+  "t": 4.2,
+  "frame": 126,
+  "type": "show",
+  "label": "#micro"
+ },
+ {
+  "t": 6,
+  "frame": 180,
+  "type": "show",
+  "label": "#clock"
+ },
+ {
+  "t": 8,
+  "frame": 240,
+  "type": "show",
+  "label": ".shard"
+ },
+ {
+  "t": 8,
+  "frame": 240,
+  "type": "show",
+  "label": ".shard"
+ },
+ {
+  "t": 8,
+  "frame": 240,
+  "type": "show",
+  "label": ".shard"
+ },
+ {
+  "t": 8,
+  "frame": 240,
+  "type": "show",
+  "label": ".shard"
+ },
+ {
+  "t": 8,
+  "frame": 240,
+  "type": "show",
+  "label": ".shard"
+ },
+ {
+  "t": 8,
+  "frame": 240,
+  "type": "show",
+  "label": ".shard"
+ },
+ {
+  "t": 10,
+  "frame": 300,
+  "type": "show",
+  "label": "#s2"
+ },
+ {
+  "t": 10,
+  "frame": 300,
+  "type": "show",
+  "label": "#seed"
+ },
+ {
+  "t": 12.4,
+  "frame": 372,
+  "type": "enter",
+  "label": "O"
+ },
+ {
+  "t": 12.4,
+  "frame": 372,
+  "type": "word",
+  "label": "O"
+ },
+ {
+  "t": 12.6,
+  "frame": 378,
+  "type": "enter",
+  "label": "MILAGRE"
+ },
+ {
+  "t": 12.6,
+  "frame": 378,
+  "type": "word",
+  "label": "MILAGRE"
+ },
+ {
+  "t": 12.8,
+  "frame": 384,
+  "type": "enter",
+  "label": "ESTÁ"
+ },
+ {
+  "t": 12.8,
+  "frame": 384,
+  "type": "word",
+  "label": "ESTÁ"
+ },
+ {
+  "t": 13,
+  "frame": 390,
+  "type": "enter",
+  "label": "NO"
+ },
+ {
+  "t": 13,
+  "frame": 390,
+  "type": "word",
+  "label": "NO"
+ },
+ {
+  "t": 13.2,
+  "frame": 396,
+  "type": "enter",
+  "label": "DNA"
+ },
+ {
+  "t": 13.2,
+  "frame": 396,
+  "type": "word",
+  "label": "DNA"
+ },
+ {
+  "t": 22,
+  "frame": 660,
+  "type": "show",
+  "label": "#s3"
+ },
+ {
+  "t": 23,
+  "frame": 690,
+  "type": "show",
+  "label": "#inv"
+ },
+ {
+  "t": 23,
+  "frame": 690,
+  "type": "enter",
+  "label": "CRESCIMENTO"
+ },
+ {
+  "t": 23,
+  "frame": 690,
+  "type": "word",
+  "label": "CRESCIMENTO"
+ },
+ {
+  "t": 23,
+  "frame": 690,
+  "type": "enter",
+  "label": "INVISÍVEL"
+ },
+ {
+  "t": 23,
+  "frame": 690,
+  "type": "word",
+  "label": "INVISÍVEL"
+ },
+ {
+  "t": 38,
+  "frame": 1140,
+  "type": "show",
+  "label": "#s4"
+ },
+ {
+  "t": 38,
+  "frame": 1140,
+  "type": "show",
+  "label": "#dead"
+ },
+ {
+  "t": 43.6667,
+  "frame": 1310,
+  "type": "show",
+  "label": "circle"
+ },
+ {
+  "t": 43.6667,
+  "frame": 1310,
+  "type": "show",
+  "label": "circle"
+ },
+ {
+  "t": 44.3333,
+  "frame": 1330,
+  "type": "show",
+  "label": "circle"
+ },
+ {
+  "t": 44.3333,
+  "frame": 1330,
+  "type": "show",
+  "label": "circle"
+ },
+ {
+  "t": 45,
+  "frame": 1350,
+  "type": "show",
+  "label": "circle"
+ },
+ {
+  "t": 45,
+  "frame": 1350,
+  "type": "show",
+  "label": "circle"
+ },
+ {
+  "t": 45.6667,
+  "frame": 1370,
+  "type": "show",
+  "label": "circle"
+ },
+ {
+  "t": 45.6667,
+  "frame": 1370,
+  "type": "show",
+  "label": "circle"
+ },
+ {
+  "t": 46.3333,
+  "frame": 1390,
+  "type": "show",
+  "label": "circle"
+ },
+ {
+  "t": 46.3333,
+  "frame": 1390,
+  "type": "show",
+  "label": "circle"
+ },
+ {
+  "t": 52,
+  "frame": 1560,
+  "type": "show",
+  "label": "#s5"
+ },
+ {
+  "t": 52,
+  "frame": 1560,
+  "type": "show",
+  "label": "#seed5"
+ },
+ {
+  "t": 56.3333,
+  "frame": 1690,
+  "type": "enter",
+  "label": "#endT"
+ },
+ {
+  "t": 58.6667,
+  "frame": 1760,
+  "type": "enter",
+  "label": "#endR"
+ }
+]
