@@ -1,0 +1,8 @@
+# cuts from events final.mp4.events.json (time s, frame, timecode, source)
+1.933	frame 58	0:01.93	event show '#s23'
+12.000	frame 360	0:12.00	event show '#s4'
+14.167	frame 425	0:14.17	event show '#barG'
+17.200	frame 516	0:17.20	event show '#s5'
+17.600	frame 528	0:17.60	event show '#cursor'
+# detected but not in events:
+17.400	frame 522	0:17.40	pixel spike x8.8 diff 11.4 corr 0.02 scene 0.10

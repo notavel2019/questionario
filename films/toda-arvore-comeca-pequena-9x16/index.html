@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Toda árvore começa pequena</title>
+<meta name="viewport" content="width=1080, height=1920">
+<style>
+@font-face { font-family: 'Montserrat'; src: url(fonts/Montserrat.woff2) format('woff2'); font-weight: 100 900; font-display: block; }
+@font-face { font-family: 'Barlow Condensed'; src: url(fonts/BarlowCondensed-Bold.woff2) format('woff2'); font-weight: 700; font-display: block; }
+/* Earth palette with a vivid green and gold for life and fruit. */
+:root {
+  --dark: #151311;
+  --cream: #efe6d6;
+  --clay: #d9d4c7;
+  --soil: #2a1d14;
+  --bark: #7d7a72;
+  --green: #2fbf4e;
+  --gold: #f2b632;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--dark); }
+#main { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--cream); }
+.scene { position: absolute; inset: 0; }
+.abs { position: absolute; }
+.hw { position: absolute; left: 0; right: 0; top: 760px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 340px; line-height: 1; color: var(--cream); white-space: nowrap; }
+.line { position: absolute; left: 0; right: 0; text-align: center; font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--dark); white-space: pre; }
+.title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 150px; line-height: 1; color: var(--cream); text-align: center; left: 0; right: 0; white-space: nowrap; }
+.draw { fill: none; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.hand { position: absolute; background: var(--dark); transform-origin: 50% 100%; }
+.shard { position: absolute; left: 270px; top: 720px; width: 540px; height: 540px; background: var(--clay); }
+</style>
+</head>
+<body>
+<div id="main">
+
+  <!-- ===== Cena 1 · O imediatismo (0-10 s) ===== -->
+  <div id="s1" class="scene" style="background:var(--dark)">
+    <div id="glow1" class="abs" style="left:-300px;top:500px;width:1680px;height:1680px;border-radius:50%;background:radial-gradient(circle,rgba(242,182,50,.16),rgba(242,182,50,0) 60%)"></div>
+    <div id="w1" class="hw">RÁPIDO</div>
+    <div id="w2" class="hw" style="color:var(--gold)">AGORA</div>
+    <div id="w3" class="hw">RESULTADOS</div>
+
+    <div id="micro" class="abs" style="left:270px;top:740px;width:540px;height:400px">
+      <svg width="540" height="400" viewBox="0 0 540 400">
+        <rect x="20" y="20" width="400" height="360" rx="40" fill="#d9d4c7"/>
+        <rect x="50" y="60" width="280" height="240" rx="20" fill="#151311"/>
+        <rect x="350" y="80" width="120" height="40" rx="12" fill="#151311"/>
+        <circle cx="410" cy="200" r="40" fill="#151311"/>
+      </svg>
+    </div>
+
+    <div id="clock" class="abs" style="left:270px;top:720px;width:540px;height:540px">
+      <svg width="540" height="540" viewBox="0 0 540 540">
+        <circle cx="270" cy="270" r="250" fill="#d9d4c7" stroke="#151311" stroke-width="14"/>
+        <g stroke="#151311" stroke-width="10" stroke-linecap="round">
+          <line x1="270" y1="50" x2="270" y2="80"/><line x1="490" y1="270" x2="460" y2="270"/>
+          <line x1="270" y1="490" x2="270" y2="460"/><line x1="50" y1="270" x2="80" y2="270"/>
+        </g>
+      </svg>
+      <div id="hourH" class="hand" style="left:262px;top:120px;width:16px;height:150px"></div>
+      <div id="minH" class="hand" style="left:264px;top:40px;width:12px;height:230px;background:var(--gold)"></div>
+    </div>
+    <div id="shards"></div>
+  </div>
+
+  <!-- ===== Cena 2 · A engenharia de Deus (10-22 s) ===== -->
+  <div id="s2" class="scene" style="background:var(--cream)">
+    <div id="seed" class="abs" style="left:390px;top:730px;width:300px;height:400px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 38% 32%,#a86f3e,#5a3a20 70%);box-shadow:0 30px 60px rgba(21,19,17,.25)">
+      <div id="xglow" class="abs" style="inset:0;background:radial-gradient(circle,rgba(242,182,50,.9),rgba(242,182,50,0) 70%);opacity:0"></div>
+      <svg id="forest" class="abs" style="left:0;top:0" width="300" height="400" viewBox="0 0 300 400"></svg>
+    </div>
+    <div id="dna" class="line" style="top:1260px;font-size:110px;line-height:1.02;font-family:'Barlow Condensed',sans-serif;font-weight:700">O MILAGRE ESTÁ NO DNA</div>
+  </div>
+
+  <!-- ===== Cena 3 · O processo invisível (22-38 s) ===== -->
+  <div id="s3" class="scene" style="background:var(--soil)">
+    <div id="soilBg" class="abs" style="inset:-40px;background:radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.04),rgba(0,0,0,0) 55%),radial-gradient(ellipse at 70% 80%,rgba(0,0,0,.35),rgba(0,0,0,0) 60%),var(--soil)"></div>
+    <div id="cam3" class="abs" style="inset:0">
+      <svg id="roots" class="abs" style="left:0;top:0" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+    </div>
+    <div id="inv" class="title abs" style="top:170px;font-size:112px">CRESCIMENTO INVISÍVEL</div>
+  </div>
+
+  <!-- ===== Cena 4 · O contraste do fruto (38-52 s) ===== -->
+  <div id="s4" class="scene" style="background:var(--cream)">
+    <div class="abs" style="left:0;top:0;width:540px;height:1920px;background:var(--clay)"></div>
+    <svg id="arms4" class="abs" style="left:0;top:0" width="1080" height="1920" viewBox="0 0 1080 1920">
+      <path id="dead" class="draw" d="M270,1500 L270,600" pathLength="1" stroke="#7d7a72" stroke-width="26" stroke-linecap="butt"/>
+      <path id="armR" class="draw" d="M810,1500 C810,1000 960,700 1060,1000" pathLength="1" stroke="#2fbf4e" stroke-width="30" stroke-linecap="round"/>
+    </svg>
+    <svg id="fruit4" class="abs" style="left:0;top:0" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+  </div>
+
+  <!-- ===== Cena 5 · O apelo (52-60 s) ===== -->
+  <div id="s5" class="scene" style="background:var(--cream)">
+    <svg id="arm5" class="abs" style="left:0;top:0" width="1080" height="1920" viewBox="0 0 1080 1920">
+      <path d="M540,1500 C540,1000 690,700 790,1000" fill="none" stroke="#2fbf4e" stroke-width="30" stroke-linecap="round"/>
+    </svg>
+    <svg id="fruit5" class="abs" style="left:0;top:0" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+    <div id="seed5" class="abs" style="left:760px;top:968px;width:60px;height:80px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#a86f3e,#5a3a20)"></div>
+    <svg id="hand" class="abs" style="left:0;top:0" width="1080" height="1920" viewBox="0 0 1080 1920">
+      <path d="M690,1640 Q790,1760 890,1640 Q890,1720 790,1760 Q690,1720 690,1640 Z" fill="#b9835a"/>
+    </svg>
+    <div id="dark" class="abs" style="inset:0;background:#0f0d0b;opacity:0;z-index:2"></div>
+    <div id="endT" class="title abs" style="top:640px;z-index:3;font-size:128px;white-space:normal;line-height:1.02">TODA ÁRVORE<br>COMEÇA PEQUENA.</div>
+    <div id="endR" class="line" style="top:960px;font-size:60px;color:var(--cream);z-index:3">Gênesis 1:11</div>
+  </div>
+
+</div>
+
+<script src="./runtime/vendor/gsap.min.js"></script>
+<script src="./runtime/motion.js"></script>
+<script>
+const M = Motion.film({ fps: 30, duration: 60, width: 1080, height: 1920, clock: 'smooth' });
+const NS = 'http://www.w3.org/2000/svg';
+const el = (id) => document.getElementById(id);
+const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+// deterministic randomness (no Math.random, the film must be a pure function of time)
+const rng = (seed) => { let s = seed >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; };
+
+// ---- scene visibility (hard cuts) ----
+M.show('#s1', 0, 300);
+M.show('#s2', 300, 660);
+M.show('#s3', 660, 1140);
+M.show('#s4', 1140, 1560);
+M.show('#s5', 1560, 1800);
+
+// ---- cena 1: flashing words, micro becomes clock, clock stops and breaks ----
+M.show('#w1', 9, 36);
+M.show('#w2', 45, 72);
+M.show('#w3', 84, 114);
+M.show('#micro', 126, 180);
+M.kf('#micro', 'rotation', [[126, 0], [180, 540, 'accelExit']]);
+M.show('#clock', 180, 240);
+M.kf('#hourH', 'rotation', [[180, 0], [240, 1080, 'accelExit']]);
+M.kf('#minH', 'rotation', [[180, 0], [240, 2160, 'accelExit']]);
+// shards: the clock breaks into six pieces that fly out
+const shardCuts = [
+  ['polygon(50% 50%, 0 0, 40% 0)', -300, -200],
+  ['polygon(50% 50%, 40% 0, 100% 10%)', 260, -240],
+  ['polygon(50% 50%, 100% 10%, 100% 70%)', 320, 80],
+  ['polygon(50% 50%, 100% 70%, 30% 100%)', 120, 300],
+  ['polygon(50% 50%, 30% 100%, 0 60%)', -260, 260],
+  ['polygon(50% 50%, 0 60%, 0 0)', -320, -40],
+];
+shardCuts.forEach(([clip, dx, dy], i) => {
+  const s = document.createElement('div'); s.className = 'shard'; s.style.clipPath = clip;
+  el('shards').appendChild(s);
+  M.show(s, 240, 300);
+  M.kf(s, 'x', [[240, 0], [300, dx, 'glide']]);
+  M.kf(s, 'y', [[240, 0], [300, dy, 'glide']]);
+  M.kf(s, 'rotation', [[240, 0], [300, dx > 0 ? 60 : -60, 'glide']]);
+});
+
+// ---- cena 2: the seed falls, lands, and shows the forest inside ----
+M.show('#seed', 300, 660);
+M.kf('#seed', 'y', [[300, -1000], [338, 0, 'crashIn']]);
+M.kf('#xglow', 'opacity', [[340, 0], [362, 1, 'glide']]);
+const forest = el('forest');
+const rand = rng(11);
+const trees = [[60, 180], [110, 230], [155, 150], [200, 250], [245, 190], [85, 120], [225, 130]];
+trees.forEach(([x, h], i) => {
+  const base = 330, top = base - h;
+  const p = mk('path', { d: `M${x},${base} L${x},${top} M${x - 34},${top + h * 0.35} L${x},${top} L${x + 34},${top + h * 0.35} M${x - 26},${top + h * 0.6} L${x},${top + h * 0.3} L${x + 26},${top + h * 0.6}`, pathLength: 1, class: 'draw', stroke: '#2fbf4e', 'stroke-width': 5, 'stroke-linecap': 'round' }, forest);
+  const at = 362 + i * 8 + Math.floor(rand() * 6);
+  M.kf(p, 'strokeDashoffset', [[at, 1], [at + 30, 0, 'softLand']]);
+});
+M.words('#dna', { at: 372, mech: 'rise', gaps: [6, 6, 6, 6], dist: 80, frames: 12, ease: 'softLand' });
+
+// ---- cena 3: a dive into the soil; roots fire down; the storm shakes the ground, not the root ----
+M.show('#inv', 690, 1140);
+M.words('#inv', { at: 690, mech: 'rise', gaps: [], dist: 60, frames: 12, ease: 'softLand' });
+M.camera('#cam3', [[660, { scale: 1 }], [780, { scale: 1.45 }, 'softInOut']], { origin: '540px 300px', ease: 'glide' });
+M.drift('#cam3', { prop: 'scale', from: 1.45, to: 1.9, start: 780, end: 1140 });
+M.drift('#glow1', { prop: 'scale', from: 0.8, to: 1.25, start: 0, end: 300 });
+const roots = el('roots');
+const R = rng(7);
+const segs = [];
+(function grow(x, y, ang, len, depth) {
+  if (depth > 5) return;
+  const x2 = x + Math.sin(ang) * len, y2 = y + Math.cos(ang) * len;
+  segs.push({ x1: x, y1: y, x2, y2, d: depth });
+  const n = depth < 2 ? 2 : (R() < 0.7 ? 2 : 1);
+  for (let i = 0; i < n; i++) {
+    const a2 = ang + (i ? 1 : -1) * (R() * 0.6 + 0.25);
+    grow(x2, y2, a2, len * (0.7 + R() * 0.12), depth + 1);
+  }
+})(540, 300, 0, 380, 0);
+segs.forEach((s, i) => {
+  const p = mk('path', { d: `M${s.x1.toFixed(1)},${s.y1.toFixed(1)} L${s.x2.toFixed(1)},${s.y2.toFixed(1)}`, pathLength: 1, class: 'draw', stroke: '#f2b632', 'stroke-width': Math.max(4, 14 - s.d * 2), 'stroke-linecap': 'round' }, roots);
+  const at = 668 + s.d * 26 + (i % 4) * 3;
+  M.kf(p, 'strokeDashoffset', [[at, 1], [at + 12, 0, 'cruise']]);
+});
+// the storm: the ground jitters for a moment (the roots, inside #cam3, stay put)
+const quake = [[900, 0], [903, -8], [906, 6], [909, -6], [912, 8], [915, -4], [918, 3], [921, 0]];
+M.kf('#soilBg', 'x', quake);
+M.kf('#soilBg', 'y', [[900, 0], [903, 5], [906, -6], [909, 4], [912, -5], [915, 3], [918, -2], [921, 0]]);
+
+// ---- cena 4: dead branch (straight) vs living branch (arches, heavy with fruit) ----
+M.show('#dead', 1140, 1560);
+M.kf('#dead', 'strokeDashoffset', [[1150, 1], [1186, 0, 'softLand']]);
+M.kf('#armR', 'strokeDashoffset', [[1200, 1], [1290, 0, 'softLand']]);
+// fruit placed along the arch, computed from the path's real geometry
+const armR = el('armR');
+const L = armR.getTotalLength();
+const fruitPts = (pathEl, Ltot, dx, host, prefix) => {
+  [0.42, 0.56, 0.68, 0.8, 0.9].forEach((f, i) => {
+    const pt = pathEl.getPointAtLength(Ltot * f);
+    const c = mk('circle', { cx: pt.x + dx, cy: pt.y, r: 30 + (i % 2) * 6, fill: '#f2b632', stroke: '#8a5a20', 'stroke-width': 3 }, host);
+    M.show(c, 1310 + i * 20, 1560);
+  });
+};
+fruitPts(armR, L, 0, el('fruit4'), 'f4');
+
+// ---- cena 5: the branch sheds a seed into a hand; the screen dims; the verse ----
+const arm5 = el('arm5').querySelector('path');
+const L5 = arm5.getTotalLength();
+fruitPts(arm5, L5, 0, el('fruit5'), 'f5');
+M.show('#seed5', 1560, 1800);
+M.kf('#seed5', 'y', [[1600, 0], [1640, 640, 'crashIn']]);
+M.kf('#dark', 'opacity', [[1620, 0], [1680, 0.9, 'softLand']]);
+M.enter('#endT', { at: 1690, frames: 12, ease: 'softLand', from: { y: 70 } });
+M.enter('#endR', { at: 1760, frames: 12, ease: 'softLand', from: { y: 30 } });
+M.drift('#s5', { prop: 'scale', from: 1, to: 1.02, start: 1560, end: 1800 });
+
+window.__ready = Motion.loaded();
+</script>
+</body>
+</html>

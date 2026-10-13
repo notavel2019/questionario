@@ -1,0 +1,224 @@
+[
+ {
+  "t": 0,
+  "frame": 0,
+  "type": "show",
+  "label": "#hook"
+ },
+ {
+  "t": 0.1333,
+  "frame": 4,
+  "type": "enter",
+  "label": "Preço"
+ },
+ {
+  "t": 0.1333,
+  "frame": 4,
+  "type": "word",
+  "label": "Preço"
+ },
+ {
+  "t": 0.3,
+  "frame": 9,
+  "type": "enter",
+  "label": "no"
+ },
+ {
+  "t": 0.3,
+  "frame": 9,
+  "type": "word",
+  "label": "no"
+ },
+ {
+  "t": 0.4667,
+  "frame": 14,
+  "type": "enter",
+  "label": "achismo"
+ },
+ {
+  "t": 0.4667,
+  "frame": 14,
+  "type": "word",
+  "label": "achismo"
+ },
+ {
+  "t": 0.6667,
+  "frame": 20,
+  "type": "enter",
+  "label": "parece"
+ },
+ {
+  "t": 0.6667,
+  "frame": 20,
+  "type": "word",
+  "label": "parece"
+ },
+ {
+  "t": 0.8667,
+  "frame": 26,
+  "type": "enter",
+  "label": "certo."
+ },
+ {
+  "t": 0.8667,
+  "frame": 26,
+  "type": "word",
+  "label": "certo."
+ },
+ {
+  "t": 1.9333,
+  "frame": 58,
+  "type": "show",
+  "label": "#s23"
+ },
+ {
+  "t": 1.9333,
+  "frame": 58,
+  "type": "enter",
+  "label": "#world"
+ },
+ {
+  "t": 2,
+  "frame": 60,
+  "type": "exit",
+  "label": "#hook"
+ },
+ {
+  "t": 2.5333,
+  "frame": 76,
+  "type": "enter",
+  "label": "#p1"
+ },
+ {
+  "t": 4.5333,
+  "frame": 136,
+  "type": "enter",
+  "label": "#p2"
+ },
+ {
+  "t": 6.5333,
+  "frame": 196,
+  "type": "enter",
+  "label": "#p3"
+ },
+ {
+  "t": 8.6,
+  "frame": 258,
+  "type": "whip",
+  "label": "#world"
+ },
+ {
+  "t": 9,
+  "frame": 270,
+  "type": "enter",
+  "label": "#g1"
+ },
+ {
+  "t": 12,
+  "frame": 360,
+  "type": "show",
+  "label": "#s4"
+ },
+ {
+  "t": 12,
+  "frame": 360,
+  "type": "enter",
+  "label": "#pcard"
+ },
+ {
+  "t": 12,
+  "frame": 360,
+  "type": "show",
+  "label": "#barM"
+ },
+ {
+  "t": 12,
+  "frame": 360,
+  "type": "show",
+  "label": "#priceM"
+ },
+ {
+  "t": 13.5,
+  "frame": 405,
+  "type": "count",
+  "label": "start 8200"
+ },
+ {
+  "t": 13.5,
+  "frame": 405,
+  "type": "count",
+  "label": "start 1195"
+ },
+ {
+  "t": 13.5,
+  "frame": 405,
+  "type": "count",
+  "label": "start 2981"
+ },
+ {
+  "t": 14.1667,
+  "frame": 425,
+  "type": "show",
+  "label": "#barG"
+ },
+ {
+  "t": 14.1667,
+  "frame": 425,
+  "type": "show",
+  "label": "#priceG"
+ },
+ {
+  "t": 14.1667,
+  "frame": 425,
+  "type": "count",
+  "label": "land 7899"
+ },
+ {
+  "t": 14.1667,
+  "frame": 425,
+  "type": "count",
+  "label": "land 675"
+ },
+ {
+  "t": 14.1667,
+  "frame": 425,
+  "type": "count",
+  "label": "land 3176"
+ },
+ {
+  "t": 15.4,
+  "frame": 462,
+  "type": "enter",
+  "label": "#res"
+ },
+ {
+  "t": 17.2,
+  "frame": 516,
+  "type": "show",
+  "label": "#s5"
+ },
+ {
+  "t": 17.2,
+  "frame": 516,
+  "type": "enter",
+  "label": ".lbl"
+ },
+ {
+  "t": 17.4,
+  "frame": 522,
+  "type": "enter",
+  "label": "#btn"
+ },
+ {
+  "t": 17.6,
+  "frame": 528,
+  "type": "show",
+  "label": "#cursor"
+ },
+ {
+  "t": 18.5333,
+  "frame": 556,
+  "type": "press",
+  "label": "#btn"
+ }
+]
