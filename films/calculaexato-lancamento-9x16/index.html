@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Calcula Exato · O preço que sobra</title>
+<meta name="viewport" content="width=1080, height=1920">
+<style>
+@font-face { font-family: 'Montserrat'; src: url(fonts/Montserrat.woff2) format('woff2'); font-weight: 100 900; font-display: block; }
+@font-face { font-family: 'Barlow Condensed'; src: url(fonts/BarlowCondensed-Bold.woff2) format('woff2'); font-weight: 700; font-display: block; }
+/* Brand, captured from calculaexato.com.br: monochrome. Accent = teal of the hero underline, used only for "sobra" (what is left). */
+:root {
+  --ground: #fcfcfd;
+  --ink: #1c2130;
+  --ink-soft: #667085;
+  --accent: #349a91;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--ground); }
+#main {
+  position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden;
+  background:
+    radial-gradient(circle at 96% 6%, rgba(52,154,145,.16), rgba(52,154,145,0) 42%),
+    var(--ground);
+  color: var(--ink); font-family: 'Montserrat', system-ui, sans-serif; font-weight: 800;
+}
+.scene, .cam { position: absolute; inset: 0; }
+.abs { position: absolute; left: 0; right: 0; text-align: center; white-space: pre; }
+.h { font-size: 96px; line-height: 1.04; letter-spacing: -0.02em; }
+.h-mid { font-size: 88px; line-height: 1.06; letter-spacing: -0.02em; white-space: normal; }
+.fee { font-size: 124px; line-height: 1; letter-spacing: -0.03em; }
+.price { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 280px; line-height: 1; letter-spacing: -0.01em; white-space: pre; }
+.prices-kf { transform-origin: 50% 50%; }
+#rail { position: absolute; top: 930px; left: 1080px; white-space: nowrap; font-size: 104px; line-height: 1; letter-spacing: -0.02em; }
+#rail span { display: inline-block; margin-right: 96px; }
+#rail i { display: inline-block; width: 26px; height: 26px; border-radius: 50%; margin-right: 26px; vertical-align: .14em; }
+.card { position: absolute; left: 90px; top: 600px; width: 900px; height: 875px; }
+.card img { display: block; width: 900px; height: 875px; }
+#tiktok { position: absolute; left: 139px; top: 854px; width: 390px; height: 247px; border: 6px solid var(--accent); border-radius: 16px; }
+.sobra { position: relative; display: inline-block; }
+#under { position: absolute; left: 0; right: 0; bottom: -0.1em; height: 0.13em; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); border-radius: 2px; }
+.lbl { font-weight: 500; font-size: 52px; line-height: 1.2; color: var(--ink-soft); }
+#btn {
+  position: absolute; left: 130px; top: 880px; width: 820px; height: 150px; border-radius: 999px;
+  background: var(--ink); color: #fff; font-size: 46px; font-weight: 800; letter-spacing: -0.01em;
+  display: flex; align-items: center; justify-content: center; white-space: nowrap;
+}
+#cursor { position: absolute; left: 0; top: 0; width: 64px; height: 64px; transform-origin: 0 0; }
+</style>
+</head>
+<body>
+<div id="main">
+
+  <!-- ===== Beat 1 (0.0-2.5 s): hook ===== -->
+  <div id="s1" class="scene">
+    <div id="h1" class="abs h" style="top:250px">Seu preço<br>parece bom.</div>
+  </div>
+
+  <!-- price: lives 0-5 s; shrinks as the fees land (beat 2) -->
+  <div id="price" class="abs price prices-kf" style="top:600px">R$ 48,20</div>
+
+  <!-- ===== Beat 2 (2.5-5.0 s): fees stack ===== -->
+  <div id="s2" class="scene">
+    <div class="abs fee" id="f1" style="top:920px">Comissão.</div>
+    <div class="abs fee" id="f2" style="top:1090px">Taxa fixa.</div>
+    <div class="abs fee" id="f3" style="top:1260px">Frete.</div>
+    <div class="abs fee" id="f4" style="top:1430px">Imposto.</div>
+  </div>
+
+  <!-- ===== Beat 3 (5.0-9.5 s): the real comparison card, macro ===== -->
+  <div id="s3" class="scene">
+    <div class="abs h-mid" style="top:200px">Compare os 6<br>de uma vez.</div>
+    <div class="cam" id="cam3">
+      <div class="card"><img src="assets/card.png" alt="Comparativo por marketplace (captura do site)"></div>
+      <div id="tiktok"></div>
+    </div>
+  </div>
+
+  <!-- ===== Beat 4 (9.5-12.5 s): the six marketplaces, real names and colours ===== -->
+  <div id="s4" class="scene">
+    <div id="rail">
+      <span style="color:#e0570f"><i style="background:#e0570f"></i>Amazon (DBA)</span><span style="color:#ba3d75"><i style="background:#ba3d75"></i>Shopee</span><span style="color:#169689"><i style="background:#169689"></i>TikTok Shop</span><span style="color:#af540e"><i style="background:#af540e"></i>Mercado Livre</span><span style="color:#7851c8"><i style="background:#7851c8"></i>Shein</span><span style="color:#b23d5a"><i style="background:#b23d5a"></i>Temu</span>
+    </div>
+  </div>
+
+  <!-- ===== Beat 5 (12.5-16.0 s): the closing sentence of the site ===== -->
+  <div id="s5" class="scene">
+    <div class="abs h" id="close" style="top:700px;font-size:84px;line-height:1.1">O preço certo não é<br>o mais alto.<br>É o que <span class="sobra">sobra<i id="under"></i></span><br>mais no seu bolso.</div>
+  </div>
+
+  <!-- ===== Beat 6 (16.0-20.0 s): call to action ===== -->
+  <div id="s6" class="scene">
+    <div class="abs lbl" style="top:700px">3 cálculos grátis pra testar</div>
+    <div id="btn">Calcular meu preço agora</div>
+  </div>
+
+  <svg id="cursor" viewBox="0 0 64 64" aria-hidden="true">
+    <path d="M2 2 L2 50 L15 38 L25 60 L35 55 L25 34 L44 34 Z" fill="#1c2130" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"/>
+  </svg>
+
+</div>
+
+<script src="./runtime/vendor/gsap.min.js"></script>
+<script src="./runtime/motion.js"></script>
+<script>
+const M = Motion.film({ fps: 30, duration: 20, width: 1080, height: 1920, clock: 'smooth' });
+
+// ---- scene visibility (hard cuts) ----
+M.show('#s1', 0, 75);
+M.show('#s2', 75, 150);
+M.show('#s3', 150, 285);
+M.show('#s4', 285, 375);
+M.show('#s5', 375, 480);
+M.show('#s6', 480, 600);
+M.show('#price', 0, 150);
+
+// ---- beat 1: hook ----
+M.enter('#h1', { at: 0, frames: 12, ease: 'softLand', from: { y: 40 } });
+M.enter('#price', { at: 0, frames: 14, ease: 'crashIn', from: { scale: 2.4 } });
+
+// ---- beat 2: fees land, the price shrinks under them ----
+M.kf('#price', 'scale', [[75, 1], [100, .62, 'softLand']]);
+M.kf('#price', 'y', [[75, 0], [100, -300, 'softLand']]);
+M.enter('#f1', { at: 84, frames: 10, ease: 'softLand', from: { y: 60 } });
+M.enter('#f2', { at: 96, frames: 10, ease: 'softLand', from: { y: 60 } });
+M.enter('#f3', { at: 108, frames: 10, ease: 'softLand', from: { y: 60 } });
+M.enter('#f4', { at: 120, frames: 10, ease: 'softLand', from: { y: 60 } });
+
+// ---- beat 3: the card, camera dives into the TikTok Shop row ----
+M.enter('#cam3', { at: 150, frames: 10, ease: 'softLand', from: { y: 36 } });
+M.camera('#cam3', [[190, { scale: 1 }], [226, { scale: 1.1 }, 'softInOut']], { origin: '334px 977px', ease: 'glide' });
+M.show('#tiktok', 214, 285);   // the highlight lands on the best row, then the cut
+
+// ---- beat 4: the rail of marketplaces pans across ----
+M.kf('#rail', 'x', [[285, 0], [375, -2010, 'cruise']]);
+
+// ---- beat 5: the closing line; "sobra" gets the teal underline ----
+M.enter('#close', { at: 375, frames: 14, ease: 'softLand', from: { y: 50 } });
+M.kf('#under', 'scaleX', [[420, 0], [440, 1, 'softLand']]);
+M.drift('#close', { prop: 'scale', from: 1, to: 1.025, start: 390, end: 480 });   // slow creep so the held sentence never freezes
+
+// ---- beat 6: CTA, the cursor presses the real button ----
+M.enter('#s6 .lbl', { at: 480, frames: 10, ease: 'softLand', from: { y: 30 } });
+M.enter('#btn', { at: 486, frames: 12, ease: 'softLand', from: { y: 30 } });
+M.show('#cursor', 500, 570);
+M.cursor('#cursor', { keys: [[500, 1250, 1450, 1, 0], [528, 700, 990, 1, 0], [560, 700, 990, 1, 0], [570, 960, 1640, 1, 0]], ease: 'glide' });
+M.press('#cursor', '#btn', { at: 564, cursorDepth: .8, targetDepth: .8, lag: 1, frames: 3, release: true });
+
+window.__ready = Motion.loaded();
+</script>
+</body>
+</html>

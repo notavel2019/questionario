@@ -1,0 +1,122 @@
+[
+ {
+  "t": 0,
+  "frame": 0,
+  "type": "show",
+  "label": "#s1"
+ },
+ {
+  "t": 0,
+  "frame": 0,
+  "type": "show",
+  "label": "#price"
+ },
+ {
+  "t": 0,
+  "frame": 0,
+  "type": "enter",
+  "label": "#h1"
+ },
+ {
+  "t": 0,
+  "frame": 0,
+  "type": "enter",
+  "label": "#price"
+ },
+ {
+  "t": 2.5,
+  "frame": 75,
+  "type": "show",
+  "label": "#s2"
+ },
+ {
+  "t": 2.8,
+  "frame": 84,
+  "type": "enter",
+  "label": "#f1"
+ },
+ {
+  "t": 3.2,
+  "frame": 96,
+  "type": "enter",
+  "label": "#f2"
+ },
+ {
+  "t": 3.6,
+  "frame": 108,
+  "type": "enter",
+  "label": "#f3"
+ },
+ {
+  "t": 4,
+  "frame": 120,
+  "type": "enter",
+  "label": "#f4"
+ },
+ {
+  "t": 5,
+  "frame": 150,
+  "type": "show",
+  "label": "#s3"
+ },
+ {
+  "t": 5,
+  "frame": 150,
+  "type": "enter",
+  "label": "#cam3"
+ },
+ {
+  "t": 7.1333,
+  "frame": 214,
+  "type": "show",
+  "label": "#tiktok"
+ },
+ {
+  "t": 9.5,
+  "frame": 285,
+  "type": "show",
+  "label": "#s4"
+ },
+ {
+  "t": 12.5,
+  "frame": 375,
+  "type": "show",
+  "label": "#s5"
+ },
+ {
+  "t": 12.5,
+  "frame": 375,
+  "type": "enter",
+  "label": "#close"
+ },
+ {
+  "t": 16,
+  "frame": 480,
+  "type": "show",
+  "label": "#s6"
+ },
+ {
+  "t": 16,
+  "frame": 480,
+  "type": "enter",
+  "label": ".abs"
+ },
+ {
+  "t": 16.2,
+  "frame": 486,
+  "type": "enter",
+  "label": "#btn"
+ },
+ {
+  "t": 16.6667,
+  "frame": 500,
+  "type": "show",
+  "label": "#cursor"
+ },
+ {
+  "t": 18.8,
+  "frame": 564,
+  "type": "press",
+  "label": "#btn"
+ }
+]
