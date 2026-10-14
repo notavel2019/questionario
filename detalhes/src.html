@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Os detalhes — Motion</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+/*FONTS*/
+:root{--bg:#1b1009;--bg2:#2d1a0d;--cream:#f3e6cf;--gold:#f5b942;--red:#e5392b;--green:#4ade80}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#050403;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;overflow:hidden;font-family:'Anton',Impact,sans-serif;background:var(--bg);color:var(--cream)}
+#world{position:absolute;inset:0}
+.sc{position:absolute;inset:0;visibility:hidden;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#3a2412 0%,var(--bg2) 45%,var(--bg) 100%)}
+.sc::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(100deg,rgba(255,200,120,.035) 0 3px,transparent 3px 11px);pointer-events:none}
+.o{position:absolute;left:0;top:0}
+.tx{position:absolute;left:0;top:0;white-space:nowrap;line-height:1;text-transform:uppercase}
+.m{font-family:'Montserrat',Arial,sans-serif;font-weight:800}
+.hand{font-family:'Caveat',cursive;font-weight:700;text-transform:none}
+.frame{position:absolute;overflow:hidden;border-radius:30px;background:#000;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 4px rgba(243,230,207,.18)}
+.wr{position:absolute;left:0;top:0;transform-origin:0 0}
+.wr img{display:block}
+.year{position:absolute;left:26px;top:24px;font-size:120px;line-height:1;color:#2a160a;background:#f3e6cf;border-radius:14px;padding:6px 34px 0;box-shadow:0 10px 26px rgba(0,0,0,.45);transform-origin:0 0;clip-path:polygon(0 4%,3% 0,12% 3%,22% 0,34% 4%,48% 0,60% 3%,74% 0,88% 4%,100% 0,98% 30%,100% 60%,97% 100%,80% 96%,66% 100%,50% 96%,34% 100%,18% 96%,6% 100%,0 96%,2% 60%)}
+.chip{position:absolute;width:290px;height:92px;border-radius:50px}
+.chip>div{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:50px;font-size:29px;letter-spacing:0}
+.ok{background:rgba(74,222,128,.16);border:4px solid #4ade80;color:#bbf7d0}
+.no{background:rgba(229,57,43,.2);border:4px solid #e5392b;color:#fecaca}
+.no span{text-decoration:line-through;text-decoration-thickness:4px}
+#pb{position:absolute;left:0;top:0;height:8px;width:1080px;background:var(--gold);transform-origin:0 0;transform:scaleX(0);z-index:70}
+#edge{position:absolute;left:0;top:0;width:1080px;height:26px;z-index:100;visibility:hidden;background:var(--gold)}
+#start{position:absolute;inset:0;z-index:100;background:rgba(5,4,3,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;color:#f3e6cf;cursor:pointer;text-align:center}
+#start b{font-weight:400;font-size:150px;line-height:1;text-transform:uppercase}
+#start span{font-family:'Caveat',cursive;font-size:80px;color:#f5b942}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="world"></div>
+  <div id="edge"></div>
+  <div id="pb"></div>
+  <div id="start"><b>Os detalhes</b><span>toque para assistir</span></div>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+const stage = $('#stage'), world = $('#world');
+function fit(){ const s = Math.min(innerWidth/1080, innerHeight/1920); stage.style.transform = `translate(${(innerWidth-1080*s)/2}px,${(innerHeight-1920*s)/2}px) scale(${s})`; }
+addEventListener('resize', fit); fit();
+const END = 40;
+const tl = gsap.timeline({paused:true}); window.__tl = tl;
+
+function mkScene(){ const d = document.createElement('div'); d.className = 'sc'; world.appendChild(d); gsap.set(d, {autoAlpha:0}); return d; }
+function H(sc, html, x, y, css = '', cls = ''){ const d = document.createElement('div'); d.className = 'o ' + cls; d.style.cssText = `left:${x}px;top:${y}px;${css}`; d.innerHTML = html; sc.appendChild(d); return d; }
+function TX(sc, text, x, y, size, color, cls = '', extra = ''){ const d = document.createElement('div'); d.className = 'tx ' + cls; d.innerHTML = text; d.style.cssText = `left:${x}px;top:${y}px;font-size:${size}px;color:${color};${extra}`; sc.appendChild(d); gsap.set(d, {xPercent:-50, yPercent:-50}); return d; }
+const hide = (...e) => gsap.set(e.flat(), {scale:0, autoAlpha:0});
+const pop = (e, t, s = 1, d = .5, ease = 'back.out(2.2)') => tl.to(e, {scale:s, autoAlpha:1, duration:d, ease}, t);
+function sparkles(sc, x, y, t, n = 8, R = 240, color = '#f5b942'){
+  for (let i = 0; i < n; i++){
+    const s = H(sc, `<svg width="50" height="50" viewBox="0 0 60 60"><path d="M30 0C33 20 40 27 60 30C40 33 33 40 30 60C27 40 20 33 0 30C20 27 27 20 30 0Z" fill="${color}"/></svg>`, x - 25, y - 25); hide(s);
+    const a = i/n*Math.PI*2 + .4, r = R*(.6 + (i%3)*.25);
+    tl.to(s, {x:Math.cos(a)*r, y:Math.sin(a)*r, scale:.5 + (i%3)*.35, autoAlpha:1, rotation:90, duration:.5, ease:'power2.out'}, t + i*.03);
+    tl.to(s, {autoAlpha:0, scale:0, duration:.4}, t + .55 + i*.03);
+  }
+}
+function mkFrame(sc, img, iw, ih, x, y, FW, FH, reg){
+  const s = FW/reg[2];
+  const fr = document.createElement('div'); fr.className = 'frame'; fr.style.cssText = `left:${x}px;top:${y}px;width:${FW}px;height:${FH}px`;
+  const wr = document.createElement('div'); wr.className = 'wr'; wr.style.cssText = `width:${iw}px;height:${ih}px`;
+  wr.innerHTML = `<img src="img/${img}" width="${iw}" height="${ih}" alt="">`;
+  fr.appendChild(wr); sc.appendChild(fr); gsap.set(wr, {scale:s, x:-reg[0]*s, y:-reg[1]*s}); fr._wr = wr; fr._FW = FW; return fr;
+}
+function view(fr, reg, t, d = .8, ease = 'power3.inOut'){ const s = fr._FW/reg[2]; tl.to(fr._wr, {scale:s, x:-reg[0]*s, y:-reg[1]*s, duration:d, ease}, t); }
+
+/* ---------- configuração das cenas ---------- */
+const SETS = [
+ { img:'6.jpg', iw:1272, ih:1697, title:'DVD DE JOGO', years:'21 ANOS DEPOIS', tags:true,
+   regs:[[230,60,960],[260,640,800],[265,1100,800]], yrs:['2005','2014','2026'],
+   caps:['Livreto, mapa e disco.','O mapa desapareceu.','Sobrou um cartão.'],
+   items:['LIVRETO','MAPA','DISCO'], st:[[1,1,1],[1,0,1],[0,0,0]], lvl:[100,58,12] },
+ { img:'7.jpg', iw:1274, ih:1699, title:'SOLDADO DE AÇÃO', years:'41 ANOS DEPOIS', tags:true,
+   regs:[[365,15,800],[440,590,720],[440,1115,720]], yrs:['1985','2005','2026'],
+   caps:['Capacete, mochila, arma e pintura.','Menos peças, menos detalhe.','Plástico de uma cor só.'],
+   items:['ACESSÓRIOS','PINTURA','DETALHES'], st:[[1,1,1],[1,1,0],[0,0,0]], lvl:[100,56,14] },
+ { img:'8.jpg', iw:1282, ih:1710, title:'ROBÔ DE COLEÇÃO', years:'42 ANOS DEPOIS', tags:true,
+   regs:[[450,10,760],[450,540,760],[450,1050,760]], yrs:['1984','2005','2026'],
+   caps:['Cada peça com acabamento.','Os detalhes começam a sumir.','Formas simples, sem acabamento.'],
+   items:['ACABAMENTO','ACESSÓRIO','DETALHES'], st:[[1,1,1],[1,1,0],[0,0,0]], lvl:[100,60,16] },
+ { img:'9.jpg', iw:1248, ih:1664, title:'BRINDE SURPRESA', years:'31 ANOS DEPOIS', tags:true,
+   regs:[[290,50,900],[290,505,900],[290,960,900]], yrs:['1995','2008','2026'],
+   caps:['Roupa, chapéu e câmera.','Menos pintura, menos história.','Um bonequinho liso.'],
+   items:['PINTURA','ACESSÓRIO','PERSONAGEM'], st:[[1,1,1],[1,1,0],[0,0,0]], lvl:[100,55,13] },
+ { img:'10.jpg', iw:1289, ih:1718, title:'SOLDADINHO', years:'58 ANOS DEPOIS', tags:false, overview:[0,0,1289],
+   regs:[[280,545,720],[280,898,720],[280,1213,720]], yrs:['1968','1995','2026'],
+   caps:['Cada relevo, cada textura.','Mais liso, mais simples.','Quase nenhum detalhe.'],
+   items:['TEXTURA','RELEVO','ACABAMENTO'], st:[[1,1,1],[1,0,1],[0,0,0]], lvl:[100,52,10] }
+];
+const STARTS = [2.6, 8.9, 15.2, 21.5, 27.8], ENDS = [8.9, 15.2, 21.5, 27.8, 34.4];
+const lvlColor = v => v > 70 ? '#4ade80' : v > 35 ? '#f5b942' : '#e5392b';
+
+/* ---------- intro (0 – 2.6) ---------- */
+{ const sc = mkScene(); tl.set(sc, {autoAlpha:1}, 0); tl.to(sc, {autoAlpha:0, duration:.3}, 2.5);
+  const imgs = ['6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg'].map((f, i) => { const d = H(sc, `<img src="img/${f}" width="380" style="display:block;border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.6)">`, 80 + (i%3)*310, 1180 + Math.floor(i/3)*40 + (i%2)*10); gsap.set(d, {rotation:(i - 2)*7, scale:0, autoAlpha:0}); tl.to(d, {scale:1, autoAlpha:.9, duration:.5, ease:'back.out(1.6)'}, 1.0 + i*.1); return d; });
+  const a = TX(sc, 'O TEMPO', 540, 330, 230, '#f3e6cf'), b = TX(sc, 'PASSA.', 540, 570, 270, '#f5b942');
+  hide(a, b); pop(a, .15, 1, .5); pop(b, .5, 1, .5);
+  const c = TX(sc, 'MAS OS <span style="color:#e5392b">DETALHES</span>', 540, 850, 120, '#f3e6cf'), d = TX(sc, 'FAZEM TODA A DIFERENÇA.', 540, 990, 82, '#f3e6cf');
+  hide(c, d); pop(c, 1.0, 1, .5); pop(d, 1.3, 1, .5);
+}
+
+/* ---------- conjuntos ---------- */
+SETS.forEach((cfg, si) => {
+  const S = STARTS[si], E = ENDS[si], sc = mkScene();
+  // entrada com wipe lateral
+  tl.set(sc, {autoAlpha:1}, S - .02); tl.fromTo(sc, {clipPath:'inset(0 0 0 100%)'}, {clipPath:'inset(0 0 0 0%)', duration:.4, ease:'power3.inOut', immediateRender:false}, S - .02);
+  gsap.set(sc, {clipPath:'inset(0 0 0 100%)'});
+  tl.set($('#edge'), {autoAlpha:1, x:1080, y:0, width:26, height:1920}, S - .02); tl.to($('#edge'), {x:-30, duration:.4, ease:'power3.inOut'}, S - .02); tl.set($('#edge'), {autoAlpha:0}, S + .4);
+  if (si < 4) tl.set(sc, {autoAlpha:0}, E + .45); else tl.set(sc, {autoAlpha:0}, E + .1);
+  // pontos de progresso
+  for (let i = 0; i < 5; i++){ const dot = H(sc, '', 540 - 100 + i*50 - 10, 108, `width:20px;height:20px;border-radius:50%;background:${i === si ? '#f5b942' : i < si ? 'rgba(243,230,207,.7)' : 'rgba(243,230,207,.2)'}`); }
+  // título
+  const tt = TX(sc, cfg.title, 540, 250, 118, '#f3e6cf'), sub = TX(sc, cfg.years, 540, 360, 74, '#f5b942', 'hand', 'text-transform:none');
+  hide(tt, sub); pop(tt, S + .1, 1, .45); pop(sub, S + .3, 1, .4);
+  // frame
+  const FW = 1000, FH = 700, FX = 40, FY = 470;
+  const fr = mkFrame(sc, cfg.img, cfg.iw, cfg.ih, FX, FY, FW, FH, cfg.overview || cfg.regs[0]); hide(fr);
+  tl.to(fr, {scale:1, autoAlpha:1, duration:.5, ease:'back.out(1.4)'}, S + .15);
+  const tiers = cfg.overview ? [S + 1.75, S + 3.5, S + 5.15] : [S + .6, S + 2.45, S + 4.3];
+  if (cfg.overview){ view(fr, cfg.regs[0], tiers[0] - .35, .8); }
+  view(fr, cfg.regs[1], tiers[1] - .3, .75); view(fr, cfg.regs[2], tiers[2] - .3, .75);
+  // etiquetas de ano
+  const yrEls = cfg.yrs.map((y, i) => { const e = H(fr, y, 0, 0, '', 'year'); e.style.left = '26px'; e.style.top = '24px'; hide(e); if (!cfg.tags) gsap.set(e, {display:'none'}); return e; });
+  if (cfg.tags) yrEls.forEach((e, i) => { tl.to(e, {scale:1, autoAlpha:1, rotation:-3, duration:.4, ease:'back.out(2.4)'}, tiers[i] + .1); if (i < 2) tl.to(e, {scale:.6, autoAlpha:0, duration:.2}, tiers[i + 1] - .15); });
+  else { const big = cfg.yrs.map((y, i) => { const e = TX(sc, y, 540, 1195 - 20, 1, '#fff'); e.remove(); return null; }); }
+  // medidor de detalhe
+  const lab = TX(sc, 'NÍVEL DE DETALHE', 300, 1245, 40, '#f3e6cf', 'm', 'letter-spacing:3px;font-size:30px'), pc = TX(sc, '100%', 930, 1245, 56, '#4ade80');
+  const track = H(sc, '<div style="position:absolute;left:0;top:0;height:100%;width:100%;border-radius:20px;background:#4ade80" class="fill"></div>', 100, 1290, 'width:880px;height:34px;border-radius:20px;background:rgba(243,230,207,.16);overflow:hidden');
+  const fill = track.querySelector('.fill'); gsap.set(fill, {transformOrigin:'0 50%', scaleX:1, backgroundColor:'#4ade80'});
+  hide(lab, pc); pop(lab, S + .35, 1, .35); pop(pc, S + .35, 1, .35); gsap.set(track, {autoAlpha:0}); tl.to(track, {autoAlpha:1, duration:.3}, S + .35);
+  const pv = {v:100};
+  cfg.lvl.forEach((v, i) => { if (i === 0) return; tl.to(fill, {scaleX:v/100, backgroundColor:lvlColor(v), duration:.8, ease:'power2.inOut'}, tiers[i] + .15);
+    tl.to(pv, {v, duration:.8, ease:'power2.inOut', onUpdate:() => { pc.textContent = Math.round(pv.v) + '%'; pc.style.color = lvlColor(pv.v); }}, tiers[i] + .15); });
+  // chips
+  cfg.items.forEach((it, k) => {
+    const cx = 40 + k*345 + 20, chip = H(sc, `<div class="ok m"><svg width="34" height="34" viewBox="0 0 38 38"><path d="M6 20L16 30L33 9" stroke="#4ade80" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>${it}</div><div class="no m"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M5 5L25 25M25 5L5 25" stroke="#e5392b" stroke-width="6" stroke-linecap="round"/></svg><span>${it}</span></div>`, cx - 20 + 14, 1375, '', 'chip');
+    chip.style.width = '310px'; chip.style.left = (40 + k*345) + 'px'; const okL = chip.children[0], noL = chip.children[1];
+    const init = cfg.st[0][k]; gsap.set(init ? noL : okL, {autoAlpha:0});
+    hide(chip); pop(chip, S + .45 + k*.1, 1, .4);
+    for (let i = 1; i < 3; i++) if (cfg.st[i][k] !== cfg.st[i - 1][k]){
+      const toOk = cfg.st[i][k] === 1, tt2 = tiers[i] + .3;
+      tl.to(toOk ? noL : okL, {autoAlpha:0, duration:.1}, tt2); tl.to(toOk ? okL : noL, {autoAlpha:1, duration:.1}, tt2);
+      tl.fromTo(chip, {rotationX:90}, {rotationX:0, duration:.35, ease:'back.out(2)', immediateRender:false}, tt2);
+      if (!toOk) tl.to(chip, {x:'+=10', duration:.05, yoyo:true, repeat:5, ease:'none'}, tt2 + .35); }
+  });
+  // legendas
+  cfg.caps.forEach((c, i) => { const el = TX(sc, c, 540, 1690, 92, '#f3e6cf', '', 'white-space:normal;width:940px;text-align:center;line-height:1.08;text-shadow:0 6px 0 rgba(0,0,0,.5)'); gsap.set(el, {autoAlpha:0, y:30});
+    tl.to(el, {autoAlpha:1, y:0, duration:.35, ease:'back.out(2)'}, tiers[i] + .15); if (i < 2) tl.to(el, {autoAlpha:0, y:-20, duration:.2}, tiers[i + 1] - .1); });
+  const last = H(sc, '', 0, 0); last.remove();
+  if (!cfg.tags){ /* soldadinho: anos já estão nas etiquetas da foto */ }
+});
+
+/* ---------- final (34.4 – 40) ---------- */
+{ const sc = mkScene(); const S = 34.4;
+  tl.set(sc, {autoAlpha:1}, S - .02); tl.fromTo(sc, {clipPath:'inset(0 0 0 100%)'}, {clipPath:'inset(0 0 0 0%)', duration:.4, ease:'power3.inOut', immediateRender:false}, S - .02); gsap.set(sc, {clipPath:'inset(0 0 0 100%)'});
+  tl.set($('#edge'), {autoAlpha:1, x:1080, y:0, width:26, height:1920}, S - .02); tl.to($('#edge'), {x:-30, duration:.4, ease:'power3.inOut'}, S - .02); tl.set($('#edge'), {autoAlpha:0}, S + .4);
+  const bgimg = H(sc, '<img src="img/10.jpg" width="1080" style="display:block;filter:blur(6px) brightness(.35)">', 0, 500); gsap.set(bgimg, {scale:1.15, transformOrigin:'50% 50%'});
+  tl.to(bgimg, {scale:1.3, duration:5.6, ease:'none'}, S);
+  const a = TX(sc, 'A <span style="color:#e5392b">MEDIOCRIDADE</span>', 540, 350, 150, '#f3e6cf');
+  const b = TX(sc, 'NÃO CHEGA', 540, 545, 205, '#f3e6cf'), c = TX(sc, 'DE REPENTE.', 540, 745, 205, '#f3e6cf');
+  hide(a, b, c); pop(a, S + .2, 1, .5); pop(b, S + .75, 1, .5); pop(c, S + 1.3, 1, .5);
+  const d = TX(sc, 'Ela chega um detalhe de cada vez.', 540, 960, 78, '#f5b942', 'hand'); hide(d); pop(d, S + 2.4, 1, .5);
+  const trk = H(sc, '<div class="fill" style="position:absolute;left:0;top:0;height:100%;width:100%;border-radius:24px;background:#e5392b;transform-origin:0 50%"></div>', 140, 1110, 'width:800px;height:40px;border-radius:24px;background:rgba(243,230,207,.18);overflow:hidden');
+  const f = trk.querySelector('.fill'); gsap.set(f, {scaleX:.1}); hide(trk); pop(trk, S + 2.9, 1, .4);
+  const pc = TX(sc, '10%', 540, 1060, 56, '#e5392b'); hide(pc); pop(pc, S + 2.9, 1, .4);
+  const pv = {v:10}; tl.to(f, {scaleX:1, backgroundColor:'#4ade80', duration:1.3, ease:'power2.inOut'}, S + 3.7);
+  tl.to(pv, {v:100, duration:1.3, ease:'power2.inOut', onUpdate:() => { pc.textContent = Math.round(pv.v) + '%'; pc.style.color = lvlColor(pv.v); }}, S + 3.7);
+  const e = TX(sc, 'CUIDE DOS DETALHES.', 540, 1320, 124, '#f3e6cf'); hide(e); pop(e, S + 4.5, 1, .5);
+  const g = TX(sc, 'O TEMPO PASSA. O CAPRICHO FICA.', 540, 1480, 50, '#f5b942', 'm', 'letter-spacing:2px'); hide(g); pop(g, S + 4.9, 1, .4);
+  sparkles(sc, 540, 1130, S + 4.9, 12, 460, '#4ade80');
+}
+tl.fromTo('#pb', {scaleX:0}, {scaleX:1, duration:END, ease:'none'}, 0);
+tl.set({}, {}, END);
+
+/* ---------- controlo ---------- */
+const st = $('#start'), q = new URLSearchParams(location.search);
+function init(){
+  if (q.has('t') || q.has('render')){
+    st.style.display = 'none';
+    const tt = parseFloat(q.get('t') || 0); for (let x = 0; x < tt; x += .04) tl.time(x); tl.time(tt); tl.pause();
+  } else {
+    st.addEventListener('click', () => { st.style.display = 'none'; tl.play(0); });
+    tl.eventCallback('onComplete', () => { st.querySelector('b').textContent = 'Rever'; st.style.display = 'flex'; });
+  }
+}
+Promise.race([Promise.all([document.fonts.load('150px Anton', 'ABC'), document.fonts.load('700 60px Caveat', 'a'), document.fonts.load('800 30px Montserrat', 'A')]), new Promise(r => setTimeout(r, 3000))]).then(() => requestAnimationFrame(init));
+</script>
+</body>
+</html>
