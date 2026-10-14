@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Glauco — Motion</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+/*FONTS*/
+:root{--y:#ffd400;--pk:#ff7ab8;--rd:#ff4b3a;--bl:#2f7bff;--gr:#19c37d;--pu:#8a5cff;--k:#111}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;overflow:hidden;font-family:'Bangers',Impact,sans-serif;background:var(--y);color:#fff}
+#bgc{position:absolute;inset:0;background:var(--y)}
+#dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(0,0,0,.14) 5px,transparent 5.5px);background-size:34px 34px;opacity:.9}
+#burst{position:absolute;left:-400px;top:260px;width:1880px;height:1880px;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.28) 0 7deg,transparent 7deg 20deg);-webkit-mask-image:radial-gradient(circle,#000 5%,transparent 62%);mask-image:radial-gradient(circle,#000 5%,transparent 62%)}
+.layer{position:absolute;inset:0}
+.o{position:absolute;left:0;top:0}
+.tx{position:absolute;left:0;top:0;white-space:nowrap;line-height:1;letter-spacing:2px}
+.out{-webkit-text-stroke:10px var(--k);paint-order:stroke fill;text-shadow:0 8px 0 var(--k)}
+.bub{position:absolute;background:#fff;color:var(--k);border:10px solid var(--k);border-radius:46px;text-align:center;line-height:1.02;padding:22px 30px;box-shadow:12px 12px 0 var(--k);text-transform:uppercase}
+.bub i{position:absolute;width:46px;height:46px;background:#fff;border-right:10px solid var(--k);border-bottom:10px solid var(--k);transform:rotate(45deg)}
+.pic{position:absolute;left:0;top:0;width:700px;height:700px}
+.pic .fr{position:absolute;inset:0;border:14px solid var(--k);border-radius:44px;overflow:hidden;background:#222;box-shadow:16px 16px 0 var(--k)}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
+#cap{position:absolute;left:40px;width:1000px;top:1500px;height:330px;z-index:60;pointer-events:none}
+.chunk{position:absolute;inset:0;display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:0 .22em;text-align:center;text-transform:uppercase;line-height:1.02;visibility:hidden}
+.w{display:inline-block;transform-origin:50% 75%;color:#fff;-webkit-text-stroke:9px var(--k);paint-order:stroke fill;text-shadow:0 7px 0 var(--k)}
+.w.e{color:var(--y)}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:55;pointer-events:none}
+#pb{position:absolute;left:0;top:0;height:10px;width:1080px;background:var(--k);transform-origin:0 0;transform:scaleX(0);z-index:70}
+#start{position:absolute;inset:0;z-index:100;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;cursor:pointer;text-align:center}
+#start b{font-weight:400;font-size:220px;line-height:.95;color:var(--y);-webkit-text-stroke:10px #000;paint-order:stroke fill}
+#start span{font-size:64px;color:#fff;letter-spacing:4px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bgc"></div><div id="dots"></div><div id="burst"></div>
+  <div class="layer" id="sc"></div>
+  <div class="layer" id="ph"></div>
+  <div class="layer" id="fg"></div>
+  <div id="cap"></div>
+  <div id="flash"></div><div id="pb"></div>
+  <div id="start"><b>Glauco</b><span>toque para assistir com som</span></div>
+</div>
+<audio id="au" src="audio.m4a" preload="auto"></audio>
+<script>
+const $ = s => document.querySelector(s);
+const stage = $('#stage'), SC = $('#sc'), PH = $('#ph'), FG = $('#fg');
+function fit(){ const s = Math.min(innerWidth/1080, innerHeight/1920); stage.style.transform = `translate(${(innerWidth-1080*s)/2}px,${(innerHeight-1920*s)/2}px) scale(${s})`; }
+addEventListener('resize', fit); fit();
+const END = 36.4;
+const tl = gsap.timeline({paused:true}); window.__tl = tl;
+
+/* ---------- helpers ---------- */
+const K = '#111';
+function H(parent, html, x, y, w, h, css = ''){ const d = document.createElement('div'); d.className = 'o'; d.style.cssText = `left:${x - w/2}px;top:${y - h/2}px;width:${w}px;height:${h}px;${css}`; d.innerHTML = html; parent.appendChild(d); return d; }
+function TX(parent, text, x, y, size, color = '#fff', rot = 0){ const d = document.createElement('div'); d.className = 'tx out'; d.textContent = text; d.style.cssText = `left:${x}px;top:${y}px;font-size:${size}px;color:${color}`; parent.appendChild(d); gsap.set(d, {xPercent:-50, yPercent:-50, rotation:rot}); return d; }
+function BUB(parent, text, x, y, w, size = 70, side = 'bl', bg = '#fff', color = K){ const d = document.createElement('div'); d.className = 'bub o'; d.style.cssText = `left:${x - w/2}px;top:${y}px;width:${w}px;font-size:${size}px;background:${bg};color:${color}`; d.innerHTML = text;
+  const t = document.createElement('i'); t.style.background = bg; const pos = {bl:'left:60px;bottom:-30px', br:'right:60px;bottom:-30px', tl:'left:60px;top:-30px;transform:rotate(225deg)', tr:'right:60px;top:-30px;transform:rotate(225deg)'}[side]; t.style.cssText += ';' + pos; d.appendChild(t); parent.appendChild(d); return d; }
+const hide = (...e) => gsap.set(e.flat(), {autoAlpha:0, scale:0});
+const pop = (e, t, s = 1, d = .45, ease = 'back.out(2.4)') => tl.to(e, {scale:s, autoAlpha:1, duration:d, ease}, t);
+const out = (e, t, d = .2) => tl.to(e, {autoAlpha:0, scale:.6, duration:d, ease:'power2.in'}, t);
+const slide = (e, t, x, y, d = .5, ease = 'back.out(1.6)') => { gsap.set(e, {x, y, autoAlpha:0, scale:1}); tl.to(e, {x:0, y:0, autoAlpha:1, duration:d, ease}, t); };
+function shake(t, a = 14, n = 8){ tl.to(stage.querySelectorAll('.layer'), {x:`+=${a}`, y:`-=${a*.5}`, duration:.04, yoyo:true, repeat:n, ease:'none'}, t); tl.set(stage.querySelectorAll('.layer'), {x:0, y:0}, t + .04*(n + 1) + .01); }
+function flash(t, a = .7, d = .3){ tl.fromTo('#flash', {opacity:a}, {opacity:0, duration:d, ease:'power2.out', immediateRender:false}, t); }
+function sparks(parent, x, y, t, n = 10, R = 260, cols = ['#fff', '#ffd400', '#ff7ab8']){ for (let i = 0; i < n; i++){ const s = H(parent, `<svg width="60" height="60" viewBox="0 0 60 60"><path d="M30 0C33 20 40 27 60 30C40 33 33 40 30 60C27 40 20 33 0 30C20 27 27 20 30 0Z" fill="${cols[i%cols.length]}" stroke="#111" stroke-width="3"/></svg>`, x, y, 60, 60); hide(s);
+  const a = i/n*6.283 + .3, r = R*(.55 + (i%3)*.25); tl.to(s, {x:Math.cos(a)*r, y:Math.sin(a)*r, scale:.6 + (i%3)*.3, autoAlpha:1, rotation:90, duration:.45, ease:'power2.out'}, t + i*.025); tl.to(s, {autoAlpha:0, scale:0, duration:.35}, t + .5 + i*.025); } }
+const bgTo = (c, t) => tl.to('#bgc', {backgroundColor:c, duration:.25}, t);
+const burst = (t, vis = 1) => tl.to('#burst', {opacity:vis, duration:.2}, t);
+function mkScene(){ const g = document.createElement('div'); g.className = 'layer'; SC.appendChild(g); return g; }
+const star = (txt, w, h, fill = '#ff4b3a') => `<svg width="${w}" height="${h}" viewBox="0 0 400 300" style="overflow:visible"><polygon points="200,6 238,70 310,38 300,112 392,120 330,176 388,238 306,246 292,300 226,262 200,298 168,260 100,296 94,244 8,236 68,176 6,118 98,108 92,36 164,68" fill="${fill}" stroke="#111" stroke-width="12" stroke-linejoin="round"/></svg><div class="tx out" style="left:50%;top:50%;transform:translate(-50%,-50%) rotate(-6deg);font-size:${h*.3}px;color:#fff">${txt}</div>`;
+
+/* ---------- fundo vivo ---------- */
+tl.to('#burst', {rotation:60, duration:END, ease:'none', transformOrigin:'50% 50%'}, 0);
+
+/* ---------- personagem: a foto ---------- */
+const P = 700, SF = P/640;
+const pic = document.createElement('div'); pic.className = 'pic'; pic.innerHTML = '<div class="fr"><img src="img/glauco.jpg" alt=""></div>'; PH.appendChild(pic);
+const frame = pic.querySelector('.fr');
+gsap.set(pic, {x:540 - P/2, y:860 - P/2, transformOrigin:'50% 50%', scale:0, autoAlpha:0});
+const place = (t, x, y, s, r = 0, d = .5, ease = 'back.out(1.5)') => tl.to(pic, {x:x - P/2, y:y - P/2, scale:s, rotation:r, duration:d, ease}, t);
+// props presos à foto
+const crown = H(pic, `<svg width="230" height="170" viewBox="0 0 230 170"><path d="M14 150L6 36L66 84L115 8L164 84L224 36L216 150Z" fill="#ffd400" stroke="#111" stroke-width="10" stroke-linejoin="round"/><circle cx="115" cy="112" r="14" fill="#ff4b3a" stroke="#111" stroke-width="6"/><circle cx="50" cy="110" r="10" fill="#2f7bff" stroke="#111" stroke-width="6"/><circle cx="180" cy="110" r="10" fill="#19c37d" stroke="#111" stroke-width="6"/></svg>`, 300*SF, 4*SF - 90, 230, 170); hide(crown);
+const flagProp = H(pic, `<svg width="236" height="760" viewBox="0 0 236 760" style="overflow:visible"><rect x="5" y="6" width="12" height="750" rx="6" fill="#6b4a2a" stroke="#111" stroke-width="5"/><g transform="translate(17 10) scale(.62)"><g class="fl"><path d="M0 12C74 -8 144 40 224 12C274 -4 314 4 344 14V190C314 180 274 170 224 190C144 222 74 170 0 194Z" fill="#ffd400" stroke="#111" stroke-width="12" stroke-linejoin="round"/><path d="M174 60L188 96L226 98L196 120L206 156L174 136L142 156L152 120L122 98L160 96Z" fill="#111"/></g></g></svg>`, 813, 330, 236, 760, 'transform-origin:5px 760px'); hide(flagProp);
+const sweat = H(pic, `<svg width="70" height="110" viewBox="0 0 70 110"><path d="M35 6C60 44 66 66 50 90C40 104 20 104 10 90C-6 66 10 44 35 6Z" fill="#6fd0ff" stroke="#111" stroke-width="8"/></svg>`, 600, 90, 70, 110); hide(sweat);
+const qm = TX(pic, '?', 640, 40, 260, '#ff4b3a', 12); hide(qm);
+const hearts = [0, 1, 2, 3].map(i => { const h = H(pic, `<svg width="90" height="80" viewBox="0 0 90 80"><path d="M45 78C10 52 0 34 0 22C0 8 12 0 24 0C34 0 41 6 45 14C49 6 56 0 66 0C78 0 90 8 90 22C90 34 80 52 45 78Z" fill="#ff3b6b" stroke="#111" stroke-width="5"/></svg>`, [80, 640, 40, 690][i], [140, 160, 400, 380][i], 90, 80); hide(h); return h; });
+
+/* ======================================================================
+   CENAS  (tempos da narração)
+   ====================================================================== */
+/* A · 0 – 4.7 : a última palavra era sempre dele */
+{ const g = mkScene(); gsap.set(g, {autoAlpha:1});
+  tl.to(pic, {y:770 - P/2, autoAlpha:1, scale:.9, duration:.6, ease:'back.out(1.6)'}, .15); tl.fromTo(pic, {rotation:-8}, {rotation:0, duration:.6, ease:'elastic.out(1,.5)', immediateRender:false}, .15);
+  const t1 = TX(g, 'GLAUCO', 540, 240, 190, '#ffd400', -4); hide(t1); pop(t1, .3);
+  const t2 = TX(g, 'O REI DA CASA', 540, 1415, 110, '#fff', -3); hide(t2); pop(t2, 2.2);
+  gsap.set(crown, {y:-600, autoAlpha:0, scale:1, rotation:-20}); tl.to(crown, {y:0, autoAlpha:1, rotation:0, duration:.7, ease:'bounce.out'}, 1.35); sparks(g, 540, 560, 1.9, 10, 300);
+  const b = BUB(g, 'A ÚLTIMA PALAVRA É SEMPRE MINHA!', 540, 1120, 800, 70, 'tl'); hide(b); pop(b, 2.5, 1, .45); gsap.set(b, {transformOrigin:'30% 0%'});
+  tl.to(pic, {scale:.96, duration:.3, yoyo:true, repeat:5, ease:'sine.inOut'}, 2.7);
+  out([t1, t2, b], 4.5);
+}
+/* B · 4.8 – 6.4 : Sim, amor. */
+{ const g = mkScene(); bgTo('#ff7ab8', 4.75); burst(4.75, .6);
+  tl.to(crown, {y:-900, x:300, rotation:900, autoAlpha:0, duration:.8, ease:'power2.in'}, 4.95); flash(4.95, .4, .3);
+  place(4.95, 540, 940, .8, -6, .5);
+  const b = BUB(g, 'SIM, AMOR…', 540, 1000, 560, 90, 'tl', '#fff'); gsap.set(b, {y:0}); hide(b); pop(b, 5.35, .8, .45);
+  tl.to(sweat, {autoAlpha:1, scale:1, duration:.3}, 5.4); tl.to(sweat, {y:50, duration:.5, yoyo:true, repeat:2}, 5.8);
+  hearts.forEach((h, i) => { pop(h, 5.1 + i*.12, .9, .4); tl.to(h, {y:-60, autoAlpha:0, duration:.9, ease:'power1.out'}, 5.6 + i*.1); });
+  out([b], 6.3); tl.to(sweat, {autoAlpha:0, duration:.1}, 6.4);
+}
+/* C · 6.5 – 8.7 : um dia, a mulher anunciou */
+const wife = (mood) => `<svg width="420" height="560" viewBox="0 0 420 560" style="overflow:visible"><path d="M70 260C40 140 110 40 210 40C310 40 380 140 350 260C350 300 330 330 300 340L120 340C90 330 70 300 70 260Z" fill="#3b2314" stroke="#111" stroke-width="10"/><circle cx="210" cy="220" r="118" fill="#ffd2a8" stroke="#111" stroke-width="10"/><path d="M96 190C140 120 280 120 324 190C290 150 130 150 96 190Z" fill="#3b2314" stroke="#111" stroke-width="8"/><g fill="#111"><circle cx="165" cy="230" r="13"/><circle cx="255" cy="230" r="13"/></g><path d="M130 196L190 210M290 196L230 210" stroke="#111" stroke-width="10" stroke-linecap="round"/><path d="${mood === 'shout' ? 'M170 290Q210 340 250 290Q210 270 170 290Z' : 'M170 296Q210 320 250 296'}" fill="${mood === 'shout' ? '#a8001e' : 'none'}" stroke="#111" stroke-width="9" stroke-linecap="round"/><path d="M90 340C60 420 40 500 40 560H380C380 500 360 420 330 340Z" fill="#8a5cff" stroke="#111" stroke-width="10"/></svg>`;
+const wifeEl = H(SC, wife('shout'), 820, 1000, 420, 560); hide(wifeEl);
+const mega = H(SC, `<svg width="300" height="200" viewBox="0 0 300 200" style="overflow:visible"><path d="M20 80L170 20L170 180L20 120Z" fill="#ff4b3a" stroke="#111" stroke-width="10" stroke-linejoin="round"/><rect x="170" y="10" width="40" height="180" rx="12" fill="#ddd" stroke="#111" stroke-width="10"/><path d="M220 60Q260 100 220 140M240 40Q300 100 240 160" stroke="#111" stroke-width="10" fill="none" stroke-linecap="round"/></svg>`, 560, 1000, 300, 200); hide(mega);
+{ const g = mkScene(); bgTo('#2f7bff', 6.5); burst(6.5, 1);
+  place(6.5, 300, 1020, .62, -4, .5);
+  tl.to(wifeEl, {scale:1, autoAlpha:1, duration:.5, ease:'back.out(1.8)'}, 6.7); tl.to(wifeEl, {x:20, y:-6, duration:.25, yoyo:true, repeat:5}, 7.2);
+  tl.to(mega, {scale:1, autoAlpha:1, duration:.4, ease:'back.out(2)'}, 7.2);
+  const st = H(g, star('ANÚNCIO!', 520, 390, '#ff4b3a'), 540, 520, 520, 390); hide(st); pop(st, 7.3, 1, .45); tl.to(st, {rotation:6, duration:.4, yoyo:true, repeat:3, ease:'sine.inOut'}, 7.8); shake(7.3, 12, 6);
+  out([st], 8.45);
+}
+/* D · 8.9 – 12.4 : hoje vamos à parada… você vai levar a bandeira */
+{ const g = mkScene(); bgTo('#19c37d', 8.85); burst(8.85, 1);
+  const arc = H(g, `<svg width="900" height="450" viewBox="0 0 900 450" style="overflow:visible"><g fill="none" stroke-width="40" stroke-linecap="round">${['#ff4b3a', '#ff9a1f', '#ffd400', '#19c37d', '#2f7bff', '#8a5cff'].map((c, i) => `<path d="M${60 + i*36} 430A${390 - i*36} ${390 - i*36} 0 0 1 ${840 - i*36} 430" stroke="${c}"/>`).join('')}</g></svg>`, 540, 420, 900, 450); hide(arc); tl.to(arc, {scale:1, autoAlpha:1, duration:.5, ease:'back.out(1.6)'}, 9.0);
+  const disco = H(g, `<svg width="160" height="200" viewBox="0 0 160 200"><path d="M80 0V50" stroke="#111" stroke-width="8"/><circle cx="80" cy="120" r="64" fill="#cfd8e3" stroke="#111" stroke-width="8"/><path d="M20 120H140M80 56V184M34 78Q80 100 126 78M34 162Q80 140 126 162" stroke="#111" stroke-width="5" fill="none"/></svg>`, 880, 150, 160, 200); hide(disco); pop(disco, 9.3); tl.to(disco, {rotation:14, duration:.5, yoyo:true, repeat:6, ease:'sine.inOut'}, 9.5);
+  tl.to(wifeEl, {x:-20, y:0, duration:.2}, 8.9); tl.to(wifeEl, {x:20, duration:.25, yoyo:true, repeat:9}, 9.1);
+  const b = BUB(g, 'HOJE VAMOS À PARADA!', 340, 1180, 620, 70, 'tr'); hide(b); pop(b, 9.2); out([b], 10.5);
+  // a bandeira voa para a mão dele
+  const fl = H(g, `<svg width="260" height="190" viewBox="0 0 260 190" style="overflow:visible"><path d="M10 40C70 10 130 70 200 40V150C130 180 70 120 10 150Z" fill="#ffd400" stroke="#111" stroke-width="8"/></svg>`, 880, 1300, 260, 190); hide(fl);
+  tl.to(fl, {scale:1.2, autoAlpha:1, duration:.3}, 10.6); tl.to(fl, {x:-620, y:-320, rotation:-30, scale:.8, duration:.8, ease:'power2.inOut'}, 10.9); tl.to(fl, {autoAlpha:0, duration:.1}, 11.7);
+  tl.to(flagProp, {autoAlpha:1, scale:1, duration:.5, ease:'back.out(2)'}, 11.7); tl.to(flagProp.querySelector('.fl'), {skewY:6, duration:.35, yoyo:true, repeat:30, ease:'sine.inOut', transformOrigin:'0 50%'}, 11.8);
+  place(11.5, 330, 1000, .7, -4, .5); flash(11.7, .5, .3);
+  tl.to([wifeEl, mega], {autoAlpha:0, scale:.7, duration:.3}, 12.2); out([arc, disco], 12.3);
+  const b2 = BUB(g, 'E VOCÊ VAI LEVAR A BANDEIRA!', 600, 470, 700, 62, 'bl'); hide(b2); pop(b2, 10.65); out([b2], 12.3);
+}
+/* E · 13.1 – 14.7 : Glauco só perguntou */
+{ const g = mkScene(); bgTo('#ffd400', 13.0); burst(13.0, .9);
+  place(13.1, 480, 900, 1.05, 3, .5);
+  tl.to(qm, {scale:1, autoAlpha:1, duration:.4, ease:'elastic.out(1,.5)'}, 13.5); tl.to(qm, {rotation:-6, duration:.2, yoyo:true, repeat:4}, 13.9);
+  const t = TX(g, 'HMMM…', 540, 330, 190, '#fff', -4); hide(t); pop(t, 13.3); out([t], 14.5);
+  tl.to(qm, {autoAlpha:0, duration:.1}, 14.8);
+}
+/* F · 14.9 – 17.2 : a grande ou a pequena? */
+{ const g = mkScene(); bgTo('#ff7ab8', 14.85);
+  place(14.9, 500, 1050, .62, 0, .5); gsap.set(g, {autoAlpha:1}); tl.to(flagProp, {autoAlpha:0, duration:.1}, 14.85); tl.to(flagProp, {autoAlpha:1, duration:.1}, 17.5);
+  const big = H(g, `<svg width="360" height="520" viewBox="0 0 360 520" style="overflow:visible"><rect x="8" y="0" width="18" height="520" rx="8" fill="#6b4a2a" stroke="#111" stroke-width="8"/><path d="M26 12C100 -8 170 40 250 12C300 -4 340 4 350 14V250C320 240 290 236 250 252C170 284 100 230 26 254Z" fill="#ffd400" stroke="#111" stroke-width="10" stroke-linejoin="round"/></svg>`, 230, 500, 360, 520); hide(big);
+  const small = H(g, `<svg width="120" height="180" viewBox="0 0 120 180" style="overflow:visible"><rect x="4" y="0" width="8" height="180" rx="4" fill="#6b4a2a" stroke="#111" stroke-width="5"/><path d="M12 6C40 -2 70 20 100 8V80C70 90 40 70 12 84Z" fill="#ffd400" stroke="#111" stroke-width="6" stroke-linejoin="round"/></svg>`, 850, 590, 120, 180); hide(small);
+  const l1 = TX(g, 'A GRANDE', 230, 850, 90, '#fff', -4), l2 = TX(g, 'A PEQUENA', 850, 790, 90, '#fff', 4); hide(l1, l2);
+  const b = BUB(g, 'LEVO A GRANDE OU A PEQUENA?', 540, 110, 880, 80, 'bl'); hide(b);
+  pop(b, 15.0); pop(big, 15.2, 1, .5); pop(small, 15.5); pop(l1, 15.5); pop(l2, 15.8);
+  const arr = H(g, `<svg width="160" height="160" viewBox="0 0 200 200"><path d="M100 10V130M40 90L100 170L160 90" stroke="#111" stroke-width="30" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M100 10V130M40 90L100 170L160 90" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`, 230, 1000, 160, 160); hide(arr); pop(arr, 16.0);
+  tl.to(arr, {x:620, duration:.45, ease:'power2.inOut'}, 16.25); tl.to(arr, {x:0, duration:.45, ease:'power2.inOut'}, 16.7);
+  out([b, big, small, l1, l2, arr], 17.35);
+}
+/* G · 17.7 – 22.4 : a foto no grupo dos amigos */
+const phone = H(SC, `<div style="width:100%;height:100%;background:#0b141a;border:14px solid #111;border-radius:70px;box-shadow:14px 14px 0 #111;overflow:hidden;position:relative"><div style="height:130px;background:#128c7e;display:flex;align-items:center;gap:22px;padding:0 30px"><div style="width:76px;height:76px;border-radius:50%;background:#ffd400;border:6px solid #111"></div><div style="font-size:54px;color:#fff;line-height:1">GRUPO DOS AMIGOS</div></div><div id="chat" style="position:absolute;left:0;right:0;top:130px;bottom:0;background:#e5ddd5"></div></div>`, 540, 760, 820, 1250); hide(phone);
+const chat = phone.querySelector('#chat');
+function msg(text, y, side, t, big = false, bg = '#fff'){ const m = document.createElement('div'); m.className = 'o'; m.style.cssText = `top:${y}px;${side === 'r' ? 'right:24px' : 'left:24px'};max-width:620px;padding:16px 26px;border-radius:30px;font-size:${big ? 66 : 52}px;line-height:1.05;color:#111;background:${side === 'r' ? '#dcf8c6' : bg};border:6px solid #111;white-space:nowrap`; m.textContent = text; chat.appendChild(m); gsap.set(m, {autoAlpha:0, scale:0, transformOrigin:side === 'r' ? '100% 100%' : '0 100%'}); tl.to(m, {autoAlpha:1, scale:1, duration:.3, ease:'back.out(2.4)'}, t); return m; }
+{ const g = mkScene(); bgTo('#2f7bff', 17.55); burst(17.55, 1);
+  tl.to(phone, {scale:1, autoAlpha:1, duration:.5, ease:'back.out(1.6)'}, 17.65);
+  // a foto entra no chat
+  tl.to(pic, {x:540 - P/2 + 150, y:540 - P/2, scale:.42, rotation:4, duration:.6, ease:'power3.inOut'}, 18.1);
+  tl.set(pic, {zIndex:5}, 18.1);
+  const ping = TX(g, 'PLIM!', 880, 190, 120, '#fff', 8); hide(ping); pop(ping, 18.25); out([ping], 19.2);
+  const msgs = [['KKKKKKKKKK', 640, 'l', 19.4, true], ['SERÁ QUE É ELE MESMO??', 730, 'l', 19.9, false], ['CHEFE DA CASA 👑', 820, 'r', 20.3, false], ['SIM, AMOR 😂', 910, 'l', 20.7, false], ['PARA, QUE EU MORRO!!!', 1000, 'l', 21.05, false], ['KKKKKKKKKKKKKK', 1090, 'r', 21.3, true]];
+  const mm = msgs.map(([t, y, s, tt, b]) => msg(t, y - 290, s, tt, b)); gsap.set(mm.slice(), {});
+  // medidor de zoeira
+  const gauge = H(g, `<svg width="520" height="300" viewBox="0 0 520 300" style="overflow:visible"><path d="M30 270A230 230 0 0 1 490 270" fill="none" stroke="#111" stroke-width="56" stroke-linecap="round"/><path d="M30 270A230 230 0 0 1 120 100" fill="none" stroke="#19c37d" stroke-width="40" stroke-linecap="round"/><path d="M130 92A230 230 0 0 1 390 92" fill="none" stroke="#ffd400" stroke-width="40" stroke-linecap="round"/><path d="M400 100A230 230 0 0 1 490 270" fill="none" stroke="#ff4b3a" stroke-width="40" stroke-linecap="round"/><g class="nd" style="transform-origin:260px 270px"><path d="M260 270L260 70" stroke="#111" stroke-width="16" stroke-linecap="round"/><circle cx="260" cy="270" r="26" fill="#111"/></g></svg>`, 540, 1380, 520, 300); hide(gauge);
+  tl.to(gauge, {scale:1, autoAlpha:1, duration:.4, ease:'back.out(2)'}, 20.15); const nd = gauge.querySelector('.nd'); gsap.set(nd, {rotation:-80}); tl.to(nd, {rotation:90, duration:1.6, ease:'power2.in'}, 20.3);
+  const zl = TX(g, 'ZOEIRA', 540, 1230, 110, '#ffd400', -3); hide(zl); pop(zl, 20.2);
+  tl.to(phone, {x:'+=10', duration:.05, yoyo:true, repeat:30, ease:'none'}, 20.9); shake(21.9, 18, 10); flash(21.9, .6, .3);
+  const ex = H(g, star('SEM FREIO!', 560, 420, '#ff4b3a'), 540, 560, 560, 420); hide(ex); pop(ex, 21.55, 1, .4); out([ex], 22.3);
+  out([gauge, zl], 22.35);
+}
+/* H · 22.5 – 24.5 : ficou de mal com todo mundo */
+{ const g = mkScene(); bgTo('#6b6b78', 22.45); burst(22.45, 0);
+  tl.to(chat.children, {autoAlpha:0, duration:.2}, 22.5);
+  tl.to(pic, {x:540 - P/2, y:880 - P/2, scale:.95, rotation:-4, duration:.5, ease:'back.out(1.4)'}, 22.55);
+  tl.to(frame, {filter:'grayscale(1) contrast(1.1)', duration:.4}, 22.6); tl.to(phone, {autoAlpha:0, scale:.8, duration:.3}, 22.55);
+  const cl = H(g, `<svg width="520" height="260" viewBox="0 0 520 260"><g fill="#4a4a58" stroke="#111" stroke-width="10"><circle cx="130" cy="150" r="80"/><circle cx="250" cy="110" r="95"/><circle cx="380" cy="145" r="85"/><rect x="60" y="150" width="400" height="80" rx="40"/></g><path d="M270 200L230 260L270 250L240 320" stroke="#ffd400" stroke-width="16" fill="none" stroke-linejoin="round"/></svg>`, 540, 260, 520, 260); hide(cl); pop(cl, 22.7);
+  const dm = TX(g, 'DE MAL', 540, 1340, 180, '#ff4b3a', -4); hide(dm); pop(dm, 22.9);
+  const rain = []; for (let i = 0; i < 16; i++){ const d = H(g, '<div style="width:8px;height:44px;border-radius:5px;background:#6fd0ff;border:3px solid #111"></div>', 120 + i*54, 380, 14, 50); gsap.set(d, {autoAlpha:0}); tl.set(d, {autoAlpha:1}, 23.0 + (i%4)*.08); tl.to(d, {y:900, duration:.6, ease:'none', repeat:2}, 23.0 + (i%4)*.08); rain.push(d); }
+  tl.to(rain, {autoAlpha:0, duration:.1}, 24.45); out([cl, dm], 24.5);
+}
+/* I · 25 – 26.8 : ninguém manda em mim */
+{ const g = mkScene(); bgTo('#ff4b3a', 24.85); burst(24.85, 1);
+  tl.to(frame, {filter:'grayscale(0)', duration:.2}, 24.9); place(24.95, 540, 980, .95, 3, .4);
+  const b = BUB(g, 'NINGUÉM MANDA EM MIM!', 540, 300, 880, 100, 'bl'); hide(b); pop(b, 25.55, 1, .4); shake(25.6, 14, 6);
+  gsap.set(crown, {y:-500, rotation:20, scale:1, autoAlpha:0}); tl.to(crown, {y:0, autoAlpha:1, rotation:-6, duration:.5, ease:'bounce.out'}, 26.4);
+  sparks(g, 540, 700, 26.4, 10, 320);
+  out([b], 26.9);
+}
+/* J · 27.2 – 28.3 : saiu do grupo */
+{ const g = mkScene(); bgTo('#8a5cff', 27.1);
+  const pill = H(g, '<div style="font-size:58px;color:#111;background:#ffe9a8;border:8px solid #111;border-radius:50px;padding:18px 40px;white-space:nowrap;text-align:center">GLAUCO SAIU DO GRUPO</div>', 540, 360, 760, 130); hide(pill); pop(pill, 27.3);
+  const door = H(g, `<svg width="300" height="420" viewBox="0 0 300 420"><rect x="20" y="10" width="260" height="400" fill="#c8975a" stroke="#111" stroke-width="12"/><circle cx="230" cy="220" r="16" fill="#ffd400" stroke="#111" stroke-width="6"/><path d="M60 60H240V360H60Z" fill="none" stroke="#111" stroke-width="6" opacity=".35"/></svg>`, 880, 920, 300, 420); hide(door); pop(door, 27.2);
+  tl.to(pic, {x:880 - P/2, y:960 - P/2, scale:.2, rotation:30, duration:.6, ease:'power3.in'}, 27.55); tl.to(pic, {autoAlpha:0, duration:.1}, 28.1);
+  const ws = TX(g, 'ZUUUM!', 400, 1100, 120, '#fff', -8); hide(ws); pop(ws, 27.55); out([ws, pill, door], 28.4);
+}
+/* K · 28.6 – 30.5 : do sofá a mulher chamou */
+{ const g = mkScene(); bgTo('#ffb38a', 28.5); burst(28.5, 0);
+  const sofa = H(g, `<svg width="900" height="420" viewBox="0 0 900 420" style="overflow:visible"><rect x="60" y="120" width="780" height="180" rx="50" fill="#2d6b4a" stroke="#111" stroke-width="12"/><rect x="0" y="180" width="130" height="200" rx="50" fill="#245a3d" stroke="#111" stroke-width="12"/><rect x="770" y="180" width="130" height="200" rx="50" fill="#245a3d" stroke="#111" stroke-width="12"/><rect x="100" y="260" width="700" height="110" rx="30" fill="#3f8f64" stroke="#111" stroke-width="12"/><rect x="90" y="370" width="30" height="50" fill="#111"/><rect x="780" y="370" width="30" height="50" fill="#111"/></svg>`, 540, 1100, 900, 420); hide(sofa); pop(sofa, 28.65, 1, .5);
+  const wf = H(g, wife('shout'), 540, 840, 420, 560); gsap.set(wf, {scale:.7}); hide(wf); tl.to(wf, {scale:.75, autoAlpha:1, duration:.5, ease:'back.out(1.6)'}, 28.8);
+  const b = BUB(g, 'GLAUCOOO!', 540, 250, 800, 140, 'bl', '#fff', '#ff4b3a'); hide(b); pop(b, 29.35, 1, .4); shake(29.4, 16, 6);
+  out([sofa, wf, b], 30.7);
+}
+/* L · 31 – 33.3 : volta lá e para de drama */
+{ const g = mkScene(); bgTo('#2f7bff', 30.9); burst(30.9, 1);
+  const wf = H(g, wife('shout'), 820, 1060, 420, 560); gsap.set(wf, {scale:.8}); hide(wf); tl.to(wf, {scale:.8, autoAlpha:1, duration:.4, ease:'back.out(1.6)'}, 31.0); tl.to(wf, {x:-12, duration:.15, yoyo:true, repeat:12}, 31.5);
+  const b = BUB(g, 'VOLTA LÁ E PARA DE DRAMA!', 540, 220, 900, 110, 'br'); hide(b); pop(b, 31.1, 1, .4); shake(31.2, 18, 7);
+  const masks = H(g, `<svg width="300" height="260" viewBox="0 0 300 260"><path d="M20 20H180V120C180 180 140 220 100 220C60 220 20 180 20 120Z" fill="#ffd400" stroke="#111" stroke-width="10"/><circle cx="68" cy="90" r="12" fill="#111"/><circle cx="132" cy="90" r="12" fill="#111"/><path d="M62 160Q100 120 138 160" stroke="#111" stroke-width="10" fill="none" stroke-linecap="round"/></svg>`, 280, 1020, 300, 260); hide(masks); pop(masks, 32.6); const x = H(g, `<svg width="300" height="300" viewBox="0 0 200 200"><path d="M30 30L170 170M170 30L30 170" stroke="#ff4b3a" stroke-width="30" stroke-linecap="round"/></svg>`, 280, 1020, 300, 300); hide(x); pop(x, 32.8, 1, .3);
+  out([wf, b, masks, x], 33.4);
+}
+/* M · 34.2 – 36.4 : ele voltou */
+{ const g = mkScene(); bgTo('#19c37d', 34.1); burst(34.1, 1);
+  const pill = H(g, '<div style="font-size:58px;color:#111;background:#ffe9a8;border:8px solid #111;border-radius:50px;padding:18px 40px;white-space:nowrap;text-align:center">GLAUCO ENTROU NO GRUPO</div>', 540, 330, 780, 130); hide(pill); pop(pill, 34.25);
+  tl.set(pic, {x:540 - P/2, y:860 - P/2, scale:0, rotation:0, autoAlpha:0}, 34.15); tl.to(frame, {filter:'grayscale(0)', duration:.01}, 34.2);
+  tl.set(crown, {autoAlpha:0}, 34.2); tl.set(flagProp, {autoAlpha:0}, 34.2); tl.set(pic, {zIndex:1}, 34.2);
+  tl.to(pic, {scale:.9, autoAlpha:1, duration:.55, ease:'back.out(1.8)'}, 34.45);
+  tl.to(sweat, {autoAlpha:1, scale:1, duration:.3}, 34.9); tl.to(sweat, {y:40, duration:.4, yoyo:true, repeat:3}, 35.2);
+  const sim = TX(g, 'SIM, AMOR.', 540, 1345, 150, '#ffd400', -4); hide(sim); pop(sim, 35.1, 1, .5, 'elastic.out(1,.5)'); sparks(g, 540, 880, 35.1, 12, 420);
+  tl.to(pic, {rotation:-4, duration:.4, yoyo:true, repeat:3, ease:'sine.inOut'}, 35.3);
+}
+
+/* ---------- legendas ---------- */
+const CAPS = [
+ [0.0, 2.4, 'Glauco dizia que, em casa,', [0]], [2.42, 4.5, 'a última palavra era sempre dele.', [1, 2, 5]],
+ [4.92, 6.0, 'Sim, amor.', [0, 1]], [6.58, 8.6, 'Um dia, a mulher anunciou:', [3, 4]],
+ [8.9, 10.5, 'Hoje vamos à parada gay', [3, 4]], [10.6, 12.4, 'e você vai levar a bandeira do Lula.', [5, 7]],
+ [13.14, 14.7, 'Glauco só perguntou:', [0, 2]], [14.94, 16.8, 'Levo a grande ou a pequena?', [2, 5]],
+ [17.68, 19.95, 'Quando a foto chegou ao grupo dos amigos,', [2, 7]], [20.06, 22.1, 'a zoeira veio sem freio.', [1, 4]],
+ [22.54, 24.5, 'Ele ficou de mal com todo mundo.', [3, 6]], [24.96, 26.8, 'Escreveu: “ninguém manda em mim.”', [1, 2, 4]],
+ [27.24, 28.2, 'E saiu do grupo.', [1, 3]], [28.62, 30.5, 'Do sofá, a mulher chamou:', [1, 4]],
+ [31.0, 33.3, '“Glauco, volta lá e para de drama.”', [0, 5]], [34.18, 36.2, 'Ele voltou.', [1]]
+];
+const cap = $('#cap');
+CAPS.forEach(([a, b, text, em]) => {
+  const words = text.split(' '), el = document.createElement('div'); el.className = 'chunk'; el.style.fontSize = (text.length <= 14 ? 150 : text.length <= 26 ? 118 : text.length <= 34 ? 104 : 92) + 'px'; cap.appendChild(el);
+  const total = words.reduce((s, w) => s + w.length + 1, 0); let cum = 0; const E = new Set(em);
+  const spans = words.map((w, i) => { const s = document.createElement('span'); s.className = 'w' + (E.has(i) ? ' e' : ''); s.textContent = w; el.appendChild(s); const at = a + (cum/total)*(b - a)*.85; cum += w.length + 1; return [s, at, E.has(i)]; });
+  gsap.set(spans.map(x => x[0]), {autoAlpha:0, scale:.5, y:30});
+  tl.set(el, {autoAlpha:1}, a - .05);
+  spans.forEach(([s, at, e]) => tl.to(s, {autoAlpha:1, scale:e ? 1.08 : 1, y:0, duration:e ? .4 : .2, ease:e ? 'elastic.out(1,.5)' : 'back.out(3)'}, at));
+  tl.to(el, {autoAlpha:0, duration:.06}, Math.min(b + .25, 99));
+});
+tl.fromTo('#pb', {scaleX:0}, {scaleX:1, duration:END, ease:'none'}, 0);
+tl.set({}, {}, END);
+
+/* ---------- controlo ---------- */
+const au = $('#au'), st = $('#start'), q = new URLSearchParams(location.search);
+function init(){
+  if (q.has('t') || q.has('render')){ st.style.display = 'none'; const tt = parseFloat(q.get('t') || 0); for (let x = 0; x < tt; x += .1) tl.time(x); tl.time(tt); tl.pause(); }
+  else { st.addEventListener('click', () => { st.style.display = 'none'; au.currentTime = 0; au.play().catch(() => {}); tl.play(0); });
+    tl.eventCallback('onComplete', () => { st.querySelector('b').textContent = 'Rever'; st.style.display = 'flex'; });
+    gsap.ticker.add(() => { if (!au.paused && tl.isActive() && Math.abs(au.currentTime - tl.time()) > .2) tl.time(au.currentTime, false); }); }
+}
+Promise.race([document.fonts.load('100px Bangers', 'ABC'), new Promise(r => setTimeout(r, 3000))]).then(() => requestAnimationFrame(init));
+</script>
+</body>
+</html>
