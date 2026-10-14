@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Semente — Motion</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+/*FONTS*/
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#050806;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;overflow:hidden;font-family:'Anton',Impact,sans-serif;background:#0c120e}
+#world{position:absolute;inset:0}
+.sc{position:absolute;inset:0;visibility:hidden;overflow:hidden}
+.gd{position:absolute;left:0;width:1080px}
+.o{position:absolute;left:0;top:0}
+.o svg{display:block;overflow:visible}
+.tx{position:absolute;left:0;top:0;white-space:nowrap;line-height:1;text-transform:uppercase}
+.hand{font-family:'Caveat',cursive;font-weight:700;text-transform:none}
+#vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 42%,rgba(0,0,0,.6) 100%);pointer-events:none;z-index:50}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:55;pointer-events:none}
+#cap{position:absolute;left:40px;width:1000px;top:1400px;height:340px;z-index:60;pointer-events:none}
+.chunk{position:absolute;inset:0;display:flex;flex-wrap:wrap;justify-content:center;align-content:center;gap:0 .26em;text-align:center;text-transform:uppercase;color:#fff;line-height:1.04;
+  text-shadow:0 6px 0 rgba(0,0,0,.55),0 0 28px rgba(0,0,0,.7);visibility:hidden}
+.w{display:inline-block;transform-origin:50% 75%}
+#pb{position:absolute;left:0;top:0;height:8px;width:1080px;background:#ffc83d;transform-origin:0 0;transform:scaleX(0);z-index:70}
+#start{position:absolute;inset:0;z-index:100;background:rgba(5,8,6,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;color:#fff;cursor:pointer;text-transform:uppercase}
+#start b{font-weight:400;font-size:170px;line-height:.95;text-align:center}
+#start span{font-family:'Caveat',cursive;font-size:84px;color:#ffc83d;text-transform:none}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe58f"/><stop offset="1" stop-color="#f4a21f"/></linearGradient>
+  <linearGradient id="gLeaf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#58e08e"/><stop offset="1" stop-color="#1f9d57"/></linearGradient>
+  <linearGradient id="gTrunk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9a6a42"/><stop offset="1" stop-color="#5a3820"/></linearGradient>
+  <linearGradient id="gFruit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb43f"/><stop offset="1" stop-color="#ee5a1d"/></linearGradient>
+  <linearGradient id="gRoot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset="1" stop-color="#f4b73f"/></linearGradient>
+</defs></svg>
+<div id="stage">
+  <div id="world"></div>
+  <div id="vig"></div><div id="flash"></div>
+  <div id="cap"></div>
+  <div id="pb"></div>
+  <div id="start"><b>Semente</b><span>toque para assistir com som</span></div>
+</div>
+<audio id="au" src="audio.m4a" preload="auto"></audio>
+
+<script>
+const WORDS = /*WORDS*/;
+const $ = s => document.querySelector(s);
+const stage = $('#stage'), world = $('#world');
+function fit(){ const s = Math.min(innerWidth/1080, innerHeight/1920);
+  stage.style.transform = `translate(${(innerWidth-1080*s)/2}px,${(innerHeight-1920*s)/2}px) scale(${s})`; }
+addEventListener('resize', fit); fit();
+
+const t0 = i => WORDS[i][0], t1 = i => WORDS[i][1];
+const TXT = WORDS.map(w => w[2].trim()); TXT[3] = 'quer'; TXT[4] = 'a';
+
+/* ---------- arte (SVG) ---------- */
+const SV = {
+ seed:`<svg width="140" height="180" viewBox="0 0 140 180"><g transform="rotate(-18 70 90)"><ellipse cx="70" cy="90" rx="48" ry="68" fill="url(#gGold)" stroke="#b97a12" stroke-width="6"/><path d="M70 32C60 70 60 110 70 150" stroke="#b97a12" stroke-width="5" fill="none" opacity=".7"/><ellipse cx="50" cy="62" rx="9" ry="20" fill="#fff" opacity=".5"/></g></svg>`,
+ tree:`<svg width="450" height="560" viewBox="0 0 450 560"><path d="M200 560C206 480 202 430 190 370L260 370C248 430 244 480 250 560Z" fill="url(#gTrunk)"/><g fill="url(#gLeaf)"><circle cx="225" cy="210" r="150"/><circle cx="125" cy="285" r="95"/><circle cx="328" cy="285" r="98"/><circle cx="225" cy="310" r="105"/></g><g fill="#fff" opacity=".16"><circle cx="165" cy="160" r="55"/><circle cx="110" cy="262" r="30"/></g></svg>`,
+ dry:`<svg width="450" height="560" viewBox="0 0 450 560"><path d="M200 560C206 480 202 430 192 330L258 330C248 430 244 480 250 560Z" fill="#8a7767"/><g stroke="#9c8977" stroke-width="16" stroke-linecap="round" fill="none"><path d="M225 400L150 250M225 400L300 240M225 340L225 140M205 340L110 170M245 340L345 175"/></g><g stroke="#9c8977" stroke-width="9" stroke-linecap="round" fill="none"><path d="M150 250L120 190M300 240L330 180M225 220L190 170M110 170L90 120M345 175L370 125"/></g></svg>`,
+ sprout:`<svg width="200" height="320" viewBox="0 0 200 320"><path d="M100 320C100 240 95 170 100 96" stroke="#3fd07a" stroke-width="16" stroke-linecap="round" fill="none"/><path d="M100 150C40 142 16 96 26 60C80 58 108 100 100 150Z" fill="url(#gLeaf)"/><path d="M100 110C160 104 188 60 178 24C124 22 94 62 100 110Z" fill="url(#gLeaf)"/></svg>`,
+ mound:`<svg width="760" height="180" viewBox="0 0 760 180"><path d="M0 180C70 70 200 30 380 30C560 30 690 70 760 180Z" fill="#7a4a2a"/><path d="M60 180C130 100 230 70 380 70C530 70 630 100 700 180Z" fill="#8d5a34"/><g fill="#4a2c18"><circle cx="220" cy="120" r="12"/><circle cx="420" cy="90" r="9"/><circle cx="540" cy="130" r="14"/><circle cx="330" cy="140" r="8"/></g></svg>`,
+ x:`<svg width="220" height="220" viewBox="0 0 220 220"><g stroke="#ff4d57" stroke-width="34" stroke-linecap="round"><path d="M30 30L190 190M190 30L30 190"/></g></svg>`,
+ check:`<svg width="220" height="220" viewBox="0 0 220 220"><circle cx="110" cy="110" r="100" fill="#43d17a"/><path d="M60 114L98 152L162 70" stroke="#fff" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`,
+ person:`<svg width="90" height="130" viewBox="0 0 90 130"><circle cx="45" cy="32" r="28" fill="currentColor"/><path d="M4 130C4 84 24 68 45 68C66 68 86 84 86 130Z" fill="currentColor"/></svg>`,
+ fruit:`<svg width="130" height="150" viewBox="0 0 130 150"><path d="M65 36C65 20 70 10 82 4" stroke="#6b4226" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M72 24C90 4 112 10 116 22C100 34 82 32 72 24Z" fill="#43d17a"/><circle cx="65" cy="92" r="56" fill="url(#gFruit)"/><ellipse cx="44" cy="70" rx="12" ry="20" fill="#fff" opacity=".35"/></svg>`,
+ heart:`<svg width="90" height="80" viewBox="0 0 90 80"><path d="M45 78C10 52 0 34 0 22C0 8 12 0 24 0C34 0 41 6 45 14C49 6 56 0 66 0C78 0 90 8 90 22C90 34 80 52 45 78Z" fill="#ff5a6e"/></svg>`,
+ star:`<svg width="60" height="60" viewBox="0 0 60 60"><path d="M30 0C33 20 40 27 60 30C40 33 33 40 30 60C27 40 20 33 0 30C20 27 27 20 30 0Z" fill="#ffe08a"/></svg>`,
+ lock:`<svg width="240" height="320" viewBox="0 0 240 320"><path d="M60 140V96C60 40 180 40 180 96V140" stroke="#e8b630" stroke-width="28" fill="none" stroke-linecap="round"/><rect x="20" y="130" width="200" height="170" rx="36" fill="url(#gGold)" stroke="#b97a12" stroke-width="6"/><circle cx="120" cy="204" r="24" fill="#5a3d0a"/><path d="M108 214H132L138 262H102Z" fill="#5a3d0a"/></svg>`,
+ book:`<svg width="520" height="300" viewBox="0 0 520 300"><path d="M0 80V285C100 255 200 255 260 292C320 255 420 255 520 285V80Z" fill="#6b3f1d"/><path d="M260 58C200 28 100 28 18 58V268C100 238 200 238 260 272Z" fill="#fffdf4" stroke="#caa86a" stroke-width="6"/><path d="M260 58C320 28 420 28 502 58V268C420 238 320 238 260 272Z" fill="#fffaf0" stroke="#caa86a" stroke-width="6"/><g stroke="#cdbb97" stroke-width="6" stroke-linecap="round" fill="none"><path d="M60 100C110 90 170 90 225 104M60 134C110 124 170 124 225 138M60 168C110 158 170 158 225 172M295 104C350 90 410 90 460 100M295 138C350 124 410 124 460 134M295 172C350 158 410 158 460 168"/></g></svg>`,
+ cloud:`<svg width="520" height="220" viewBox="0 0 520 220"><g fill="#46577a"><circle cx="130" cy="130" r="80"/><circle cx="240" cy="95" r="95"/><circle cx="370" cy="125" r="85"/><circle cx="450" cy="150" r="55"/><rect x="60" y="130" width="440" height="75" rx="37"/></g></svg>`,
+ bolt:`<svg width="130" height="320" viewBox="0 0 130 320"><path d="M80 0L10 170H62L38 320L122 130H70Z" fill="#ffe45e" stroke="#fff" stroke-width="6" stroke-linejoin="round"/></svg>`,
+ crown:`<svg width="170" height="120" viewBox="0 0 170 120"><path d="M10 112L2 22L52 62L85 4L118 62L168 22L160 112Z" fill="url(#gGold)" stroke="#b97a12" stroke-width="6" stroke-linejoin="round"/><circle cx="85" cy="82" r="10" fill="#ff4d57"/></svg>`,
+ up:`<svg width="70" height="110" viewBox="0 0 70 110"><path d="M35 106V22M8 48L35 14L62 48" stroke="#ff6b57" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+ hands:`<svg width="300" height="240" viewBox="0 0 300 240"><g fill="#f2c9a0" stroke="#c98f5e" stroke-width="6"><ellipse cx="108" cy="140" rx="40" ry="80" transform="rotate(28 108 140)"/><ellipse cx="192" cy="140" rx="40" ry="80" transform="rotate(-28 192 140)"/></g><g stroke="#ffc83d" stroke-width="10" stroke-linecap="round"><path d="M150 40V0M104 52L84 14M196 52L216 14"/></g></svg>`,
+ no:`<svg width="320" height="320" viewBox="0 0 320 320"><circle cx="160" cy="160" r="136" fill="none" stroke="#ff4d57" stroke-width="28"/><path d="M64 256L256 64" stroke="#ff4d57" stroke-width="28" stroke-linecap="round"/></svg>`,
+ roots:`<svg width="560" height="700" viewBox="0 0 560 700"><g fill="none" stroke="url(#gRoot)" stroke-linecap="round"><path class="r" pathLength="1" stroke-width="16" d="M280 0C280 120 250 220 290 330C320 420 270 520 285 690"/><path class="r" pathLength="1" stroke-width="10" d="M275 120C200 160 140 200 110 290C90 350 80 420 70 500"/><path class="r" pathLength="1" stroke-width="10" d="M280 150C360 190 430 230 470 330C490 390 500 450 510 540"/><path class="r" pathLength="1" stroke-width="9" d="M270 260C220 300 190 360 180 440"/><path class="r" pathLength="1" stroke-width="9" d="M300 330C350 380 390 430 400 520"/><path class="r" pathLength="1" stroke-width="8" d="M286 500C230 540 210 600 190 660"/><path class="r" pathLength="1" stroke-width="8" d="M286 520C340 560 370 610 380 680"/></g></svg>`,
+ sun:`<svg width="300" height="300" viewBox="0 0 300 300"><g stroke="#ffd54a" stroke-width="14" stroke-linecap="round"><path d="M150 10V50M150 250V290M10 150H50M250 150H290M52 52L80 80M220 220L248 248M248 52L220 80M80 220L52 248"/></g><circle cx="150" cy="150" r="76" fill="url(#gGold)"/></svg>`,
+ shallow:`<svg width="300" height="110" viewBox="0 0 300 110"><g fill="none" stroke="#c9a27a" stroke-width="9" stroke-linecap="round"><path d="M150 0C150 30 140 50 120 70M150 0C150 30 165 50 190 66M150 0C148 30 150 60 150 84"/></g><g fill="none" stroke="#ff4d57" stroke-width="6" stroke-dasharray="2 14" stroke-linecap="round"><ellipse cx="150" cy="40" rx="100" ry="62"/></g></svg>`
+};
+
+/* ---------- helpers ---------- */
+const tl = gsap.timeline({paused:true});
+window.__tl = tl;
+const GY = 1060;
+function mkScene(bg){ const d = document.createElement('div'); d.className = 'sc'; d.style.background = bg; world.appendChild(d); return d; }
+function ground(sc, top, a, b, grass){
+  const g = document.createElement('div'); g.className='gd'; g.style.cssText = `top:${top}px;height:${1920-top}px;background:linear-gradient(${a},${b})`; sc.appendChild(g);
+  if (grass){ const t = document.createElement('div'); t.className='gd'; t.style.cssText = `top:${top-6}px;height:22px;background:${grass};border-radius:12px`; sc.appendChild(t); }
+  return g;
+}
+function O(sc, svg, w, h, x, y, o = {}){
+  const a = o.a || 'b';
+  const d = document.createElement('div'); d.className = 'o';
+  d.style.cssText = `width:${w}px;height:${h}px;left:${x-w/2}px;top:${a==='b' ? y-h : y-h/2}px;transform-origin:${o.origin || (a==='b' ? '50% 100%' : '50% 50%')}`;
+  if (o.color) d.style.color = o.color;
+  d.innerHTML = svg; sc.appendChild(d); return d;
+}
+function TX(sc, text, x, y, size, color, cls = ''){
+  const d = document.createElement('div'); d.className = 'tx ' + cls; d.textContent = text;
+  d.style.cssText = `left:${x}px;top:${y}px;font-size:${size}px;color:${color}`; sc.appendChild(d);
+  gsap.set(d, {xPercent:-50, yPercent:-50}); return d;
+}
+function glow(sc, x, y, r, color){
+  const d = document.createElement('div'); d.className = 'o';
+  d.style.cssText = `width:${r*2}px;height:${r*2}px;left:${x-r}px;top:${y-r}px;border-radius:50%;background:radial-gradient(circle,${color} 0%,transparent 68%)`;
+  sc.appendChild(d); return d;
+}
+const hide = (...e) => gsap.set(e.flat(), {scale:0, autoAlpha:0});
+const pop = (e, t, s = 1, d = .5, ease = 'back.out(2.4)') => tl.to(e, {scale:s, autoAlpha:1, duration:d, ease}, t);
+const fade = (e, t, d = .25) => tl.to(e, {autoAlpha:0, duration:d}, t);
+function scene(sc, a, b){
+  gsap.set(sc, {autoAlpha:0});
+  tl.to(sc, {autoAlpha:1, duration:.3, ease:'none'}, a - .1);
+  if (b < 60) tl.to(sc, {autoAlpha:0, duration:.3, ease:'none'}, b - .1);
+}
+function sparkles(sc, x, y, t, n = 7, R = 220){
+  const arr = [];
+  for (let i = 0; i < n; i++){
+    const s = O(sc, SV.star, 60, 60, x, y, {a:'c'}); hide(s); arr.push(s);
+    const ang = i/n*Math.PI*2 + .4, r = R*(.6 + (i%3)*.25);
+    tl.to(s, {x:Math.cos(ang)*r, y:Math.sin(ang)*r, scale:.5 + (i%3)*.35, autoAlpha:1, rotation:90, duration:.5, ease:'power2.out'}, t + i*.03);
+    tl.to(s, {autoAlpha:0, scale:0, duration:.4}, t + .55 + i*.03);
+  }
+}
+const punch = t => tl.fromTo(world, {scale:1.035}, {scale:1, duration:.45, ease:'power2.out', immediateRender:false}, t);
+
+/* ========== CENAS ========== */
+/* 1 · geração quer a sombra da árvore pronta */
+{ const sc = mkScene('#10241a'); scene(sc, 0, 4.0);
+  ground(sc, GY, '#2c7a4b', '#0f2a1a', '#3a9a5f');
+  const sun = O(sc, SV.sun, 300, 300, 880, 300, {a:'c'}); hide(sun); pop(sun, .1, 1, .6); tl.to(sun, {rotation:60, duration:4, ease:'none'}, 0);
+  const sh = O(sc, '<svg width="640" height="70" viewBox="0 0 640 70"><ellipse cx="320" cy="35" rx="310" ry="32" fill="#000" opacity=".4"/></svg>', 640, 70, 540, GY + 30, {a:'c'}); gsap.set(sh, {scaleX:0, autoAlpha:0});
+  const tr = O(sc, SV.tree, 450, 560, 540, GY + 6); hide(tr);
+  const people = [260, 400, 540, 680, 820].map((x, i) => { const p = O(sc, SV.person, 90, 130, x, 1330, {color:['#f6f4ee','#ffe08a','#bfe6ff','#ffe08a','#f6f4ee'][i]}); hide(p); return p; });
+  people.forEach((p, i) => pop(p, t0(0) + i*.22, .95, .45));
+  pop(tr, t0(5) - .35, 1.55, .7, 'elastic.out(1,.55)');
+  tl.to(sh, {scaleX:1, autoAlpha:1, duration:.6, ease:'power2.out'}, t0(5));
+  const badge = TX(sc, 'PRONTA', 540, 360, 120, '#10241a'); badge.style.cssText += ';background:#ffc83d;padding:18px 40px;border-radius:70px';
+  hide(badge); pop(badge, t0(8) - .05, 1, .45);
+  tl.to(badge, {y:-14, duration:.5, yoyo:true, repeat:1, ease:'sine.inOut'}, t0(8) + .5);
+}
+/* 2 · despreza a semente e odeia a terra */
+{ const sc = mkScene('#1a1b17'); scene(sc, 4.0, 8.6);
+  ground(sc, GY, '#6e4527', '#2a170c', '#4a3320');
+  const seed = O(sc, SV.seed, 140, 180, 330, GY - 140, {a:'c'}); hide(seed); pop(seed, 4.05, 1.5, .5);
+  tl.to(seed, {x:760, y:-340, rotation:520, duration:.7, ease:'power2.in'}, t0(12) - .45);
+  tl.to(seed, {autoAlpha:0, duration:.1}, t0(12) + .22);
+  const x1 = O(sc, SV.x, 220, 220, 330, GY - 160, {a:'c'}); hide(x1); pop(x1, t0(12) - .1, 1.1, .35);
+  const mound = O(sc, SV.mound, 760, 180, 730, GY + 6); hide(mound); pop(mound, t0(14) - .1, .85, .5);
+  tl.to(mound, {x:'+=14', duration:.06, yoyo:true, repeat:7, ease:'none'}, t0(14) + .3);
+  const x2 = O(sc, SV.x, 220, 220, 730, GY - 110, {a:'c'}); hide(x2); pop(x2, t0(16) - .05, 1.2, .35);
+  const red = glow(sc, 540, 900, 900, 'rgba(255,60,60,.32)'); gsap.set(red, {autoAlpha:0});
+  tl.to(red, {autoAlpha:1, duration:.15, yoyo:true, repeat:1}, t0(14));
+}
+/* 3 · Gênesis: Deus não cria florestas prontas */
+{ const sc = mkScene('#1b1736'); scene(sc, 8.6, 12.95);
+  const rays = document.createElement('div'); rays.className = 'o';
+  rays.style.cssText = 'left:-160px;top:160px;width:1400px;height:1400px;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,200,61,.30) 0 8deg,transparent 8deg 24deg);-webkit-mask-image:radial-gradient(circle,#000 5%,transparent 66%);mask-image:radial-gradient(circle,#000 5%,transparent 66%)';
+  sc.appendChild(rays); gsap.set(rays, {autoAlpha:0}); tl.to(rays, {autoAlpha:1, duration:.5}, 8.8); tl.to(rays, {rotation:40, duration:4.4, ease:'none'}, 8.7);
+  const book = O(sc, SV.book, 520, 300, 540, 1130); hide(book); pop(book, t0(19) - .15, 1.45, .6);
+  const gl = TX(sc, 'Gênesis 1', 540, 1180, 110, '#ffc83d', 'hand'); hide(gl); pop(gl, t0(19) + .25, 1, .45);
+  tl.to(book, {y:-12, duration:.8, yoyo:true, repeat:4, ease:'sine.inOut'}, 9.9);
+  const trees = [190, 365, 540, 715, 890].map((x, i) => { const t = O(sc, SV.tree, 450, 560, x, 720); hide(t); pop(t, t0(23) + i*.09, .36, .45); return t; });
+  const xx = O(sc, SV.x, 220, 220, 540, 560, {a:'c'}); hide(xx); pop(xx, t0(24) - .05, 2.4, .35);
+  tl.to(trees, {y:70, autoAlpha:0, duration:.45, stagger:.04, ease:'power2.in'}, t0(24) + .5);
+  tl.to(xx, {autoAlpha:0, duration:.3}, t0(24) + 1.0);
+}
+/* 4 · entrega sementes que contêm florestas */
+{ const sc = mkScene('#0f2a1e'); scene(sc, 12.95, 17.0);
+  const g = glow(sc, 540, 820, 420, 'rgba(255,200,61,.55)'); gsap.set(g, {autoAlpha:0});
+  const seed = O(sc, SV.seed, 140, 180, 540, 820, {a:'c'}); hide(seed);
+  pop(seed, t0(26) - .1, 2.1, .6); tl.to(g, {autoAlpha:1, duration:.5}, t0(26));
+  tl.to(g, {scale:1.15, duration:.5, yoyo:true, repeat:5, ease:'sine.inOut'}, t0(26) + .5);
+  sparkles(sc, 540, 820, t0(27) - .1, 8, 300);
+  const lens = document.createElement('div'); lens.className = 'o';
+  lens.style.cssText = 'left:290px;top:570px;width:500px;height:500px;border-radius:50%;overflow:hidden;border:12px solid #ffc83d;background:linear-gradient(#8fd3ff,#e6f7ff 62%,#7ccf8a 62%)';
+  sc.appendChild(lens); gsap.set(lens, {scale:0, autoAlpha:0});
+  const mini = [[110, 430, .42], [250, 440, .52], [390, 430, .4]].map(([x, y, s], i) => { const d = document.createElement('div'); d.className = 'o';
+    d.style.cssText = `left:${x-225}px;top:${y-560}px;width:450px;height:560px;transform-origin:50% 100%`; d.innerHTML = SV.tree; lens.appendChild(d); gsap.set(d, {scale:0}); return [d, s]; });
+  tl.to(seed, {scale:.3, autoAlpha:0, duration:.35, ease:'power2.in'}, t0(29) - .05);
+  tl.to(lens, {scale:1, autoAlpha:1, duration:.55, ease:'back.out(1.8)'}, t0(29));
+  mini.forEach(([d, s], i) => tl.to(d, {scale:s, duration:.6, ease:'elastic.out(1,.5)'}, t0(30) + i*.12));
+  sparkles(sc, 540, 820, t0(30) + .1, 9, 330);
+}
+/* 5 · enterrado? calma, plantado */
+{ const sc = mkScene('#241810'); scene(sc, 17.0, 22.7);
+  ground(sc, 900, '#6a4224', '#24140a', '#3f8a52');
+  const seed = O(sc, SV.seed, 140, 180, 540, 960, {a:'c'}); gsap.set(seed, {y:-620, autoAlpha:1, scale:1.2});
+  tl.to(seed, {y:0, duration:.55, ease:'power2.in'}, 17.35);
+  const mound = O(sc, SV.mound, 760, 180, 540, 906); hide(mound); pop(mound, t0(35) - .05, .75, .45);
+  const dark = glow(sc, 540, 800, 800, 'rgba(0,0,0,.55)'); gsap.set(dark, {autoAlpha:0}); tl.to(dark, {autoAlpha:1, duration:.4}, t0(35)); tl.to(dark, {autoAlpha:0, duration:.5}, t0(36));
+  const q = TX(sc, '?', 540, 520, 420, '#ffc83d'); hide(q); pop(q, t0(35) + .1, 1, .5, 'elastic.out(1,.5)');
+  tl.to(q, {rotation:8, duration:.2, yoyo:true, repeat:5, ease:'sine.inOut'}, t0(35) + .6);
+  tl.to(q, {scale:0, autoAlpha:0, duration:.35, ease:'power2.in'}, t0(36) + .05);
+  const calm = O(sc, '<svg width="300" height="300"><circle cx="150" cy="150" r="140" fill="none" stroke="#9be7c4" stroke-width="10"/></svg>', 300, 300, 540, 640, {a:'c'}); gsap.set(calm, {scale:.2, autoAlpha:0});
+  tl.to(calm, {scale:2.6, autoAlpha:.7, duration:.9, ease:'power2.out'}, t0(36)); tl.to(calm, {autoAlpha:0, duration:.6}, t0(36) + .8);
+  const sp = O(sc, SV.sprout, 200, 320, 540, 900); gsap.set(sp, {scaleY:0, scaleX:.4, autoAlpha:1});
+  tl.to(sp, {scaleY:1.6, scaleX:1.6, duration:.8, ease:'back.out(2)'}, t0(39) - .1);
+  const ck = O(sc, SV.check, 220, 220, 800, 560, {a:'c'}); hide(ck); pop(ck, t0(39) + .25, .9, .5);
+  sparkles(sc, 540, 640, t0(39) + .2, 9, 300);
+  const lt = glow(sc, 540, 640, 450, 'rgba(120,255,170,.4)'); gsap.set(lt, {autoAlpha:0}); tl.to(lt, {autoAlpha:1, duration:.5}, t0(39));
+}
+/* 6 · no escuro, raízes crescem */
+{ const sc = mkScene('#120b07'); scene(sc, 22.7, 28.2);
+  ground(sc, 430, '#3a2415', '#0d0705', '#2d6a42');
+  const seed = O(sc, SV.seed, 140, 180, 540, 540, {a:'c'}); gsap.set(seed, {scale:.9});
+  const sp = O(sc, SV.sprout, 200, 320, 540, 430); gsap.set(sp, {scaleY:0, scaleX:.3});
+  const hands = O(sc, SV.hands, 300, 240, 540, 230, {a:'c'}); hide(hands);
+  pop(hands, t0(42), 1, .4); tl.to(hands, {scaleX:.9, duration:.12, yoyo:true, repeat:5}, t0(42) + .4);
+  const no = O(sc, SV.no, 320, 320, 540, 230, {a:'c'}); hide(no); pop(no, t0(44) - .05, 1.15, .35);
+  tl.to([hands, no], {y:-260, autoAlpha:0, duration:.4, ease:'power2.in'}, t0(45) + .05);
+  const gg = glow(sc, 540, 540, 260, 'rgba(255,200,61,.5)'); gsap.set(gg, {autoAlpha:0});
+  tl.to(gg, {autoAlpha:1, duration:.4}, t0(45)); tl.to(gg, {scale:1.2, duration:.5, yoyo:true, repeat:3, ease:'sine.inOut'}, t0(45) + .4);
+  const rt = O(sc, SV.roots, 560, 700, 540, 1270, {a:'b'}); const paths = rt.querySelectorAll('.r');
+  gsap.set(paths, {strokeDasharray:1, strokeDashoffset:1.02});
+  paths.forEach((p, i) => tl.to(p, {strokeDashoffset:0, duration:[.9, .7, .7, .5, .5, .45, .45][i], ease:'power1.inOut'}, t0(47) + [0, .25, .3, .55, .6, .85, .9][i]));
+  tl.to(sp, {scaleY:1.1, scaleX:1.1, duration:.7, ease:'back.out(2)'}, t0(51) - .1);
+  sparkles(sc, 540, 900, t0(50) + .3, 8, 360);
+}
+/* 7 · sem raiz profunda, tempestade te tomba */
+{ const sc = mkScene('#0f1a2a'); scene(sc, 28.2, 32.9);
+  ground(sc, GY, '#4b4742', '#1a1714', '#5b6a5f');
+  const tr = O(sc, SV.tree, 450, 560, 540, GY + 4); hide(tr); pop(tr, 28.3, .9, .6);
+  const sh = O(sc, SV.shallow, 300, 110, 540, GY + 118, {a:'b'}); hide(sh); pop(sh, t0(53) - .1, 1.2, .5);
+  const note = TX(sc, 'raiz rasa', 800, GY + 150, 80, '#ff6b6b', 'hand'); hide(note); pop(note, t0(53) + .2, 1, .4); gsap.set(note, {rotation:-6});
+  const cl = O(sc, SV.cloud, 520, 220, 540, 330, {a:'c'}); gsap.set(cl, {x:-900, scale:1.7});
+  tl.to(cl, {x:0, duration:.9, ease:'power3.out'}, t0(55) - .15);
+  const dk = glow(sc, 540, 300, 900, 'rgba(0,0,0,.5)'); gsap.set(dk, {autoAlpha:0}); tl.to(dk, {autoAlpha:1, duration:.6}, t0(55));
+  const rain = []; for (let i = 0; i < 44; i++){ const d = document.createElement('div'); d.className = 'o'; d.style.cssText = `left:${(i*47)%1080}px;top:${300 + (i*37)%200}px;width:5px;height:56px;border-radius:3px;background:#9bd1ff;opacity:.75`; sc.appendChild(d); rain.push(d); gsap.set(d, {autoAlpha:0}); }
+  tl.set(rain, {autoAlpha:.75}, t0(56) - .1);
+  tl.fromTo(rain, {y:0}, {y:760, duration:.5, ease:'none', repeat:6, stagger:{each:.025, from:'random'}}, t0(56) - .1);
+  tl.set(rain, {autoAlpha:0}, 32.8);
+  const bolt = O(sc, SV.bolt, 130, 320, 700, 470); hide(bolt);
+  tl.set(bolt, {scale:1, autoAlpha:1}, t0(56) + .1); tl.set(bolt, {autoAlpha:0}, t0(56) + .35);
+  tl.fromTo('#flash', {opacity:0}, {opacity:.6, duration:.12, yoyo:true, repeat:1, immediateRender:false}, t0(56) + .1);
+  tl.to(tr, {rotation:-4, duration:.15, yoyo:true, repeat:9, ease:'sine.inOut', transformOrigin:'50% 100%'}, t0(56) + .4);
+  tl.to(tr, {rotation:82, x:70, duration:.75, ease:'bounce.out'}, t0(58) - .05);
+  const x = O(sc, SV.x, 220, 220, 540, 560, {a:'c'}); hide(x); pop(x, t0(58) + .4, 1, .35);
+}
+/* 8 · segredo; árvore seca e orgulhosa aponta para cima */
+{ const sc = mkScene('#221c12'); scene(sc, 32.9, 40.1);
+  const g = glow(sc, 540, 780, 460, 'rgba(255,200,61,.4)'); gsap.set(g, {autoAlpha:0}); tl.to(g, {autoAlpha:1, duration:.4}, 33.0); tl.to(g, {autoAlpha:0, duration:.3}, 34.35);
+  const lock = O(sc, SV.lock, 240, 320, 540, 780, {a:'c'}); hide(lock); pop(lock, 33.0, 1.7, .5);
+  tl.to(lock, {rotation:-8, duration:.12, yoyo:true, repeat:5, ease:'sine.inOut'}, t0(62));
+  const q = TX(sc, '?', 540, 780, 320, '#fff'); hide(q); pop(q, t0(62), 1, .4); tl.to(q, {autoAlpha:0, duration:.2}, 34.3);
+  tl.to(lock, {scale:0, autoAlpha:0, duration:.25, ease:'power2.in'}, 34.3);
+  ground(sc, GY, '#6b5a40', '#221a10', '#8a7650');
+  const S = 1.3, tr = O(sc, SV.dry, 450, 560, 540, GY + 4); gsap.set(tr, {scaleY:0, scaleX:.6, autoAlpha:1});
+  tl.to(tr, {scaleY:S, scaleX:S, duration:.6, ease:'back.out(1.6)'}, 34.5);
+  const lv = []; for (let i = 0; i < 7; i++){ const l = O(sc, '<svg width="30" height="20"><ellipse cx="15" cy="10" rx="14" ry="8" fill="#a8743a"/></svg>', 30, 20, 400 + i*50, 500 + (i%3)*40, {a:'c'}); gsap.set(l, {autoAlpha:0}); lv.push(l);
+    tl.set(l, {autoAlpha:1}, t0(65) + i*.1); tl.to(l, {y:560 - (i%3)*30, x:(i%2 ? 60 : -50), rotation:200, duration:1.1, ease:'sine.in'}, t0(65) + i*.1); tl.to(l, {autoAlpha:0, duration:.1}, t0(65) + i*.1 + 1.05); }
+  const cr = O(sc, SV.crown, 170, 120, 540, GY - 700, {a:'b'}); hide(cr); gsap.set(cr, {scale:1.5, autoAlpha:0, y:-300});
+  tl.to(cr, {autoAlpha:1, y:0, duration:.6, ease:'bounce.out'}, t0(67));
+  tl.to(tr, {rotation:2.2, duration:.07, yoyo:true, repeat:9, ease:'none', transformOrigin:'50% 100%'}, t0(70));
+  [[150, 250], [300, 240], [225, 140], [110, 170], [345, 175]].forEach(([tx, ty], i) => {
+    const px = 540 + (tx - 225)*S, py = GY + 4 - (560 - ty)*S;
+    const a = O(sc, SV.up, 70, 110, px, py - 20, {a:'b'}); hide(a); pop(a, t0(71) + i*.12, 1.1, .4);
+    tl.to(a, {y:-24, duration:.35, yoyo:true, repeat:5, ease:'sine.inOut'}, t0(71) + .6 + i*.05); });
+}
+/* 9 · árvore madura se curva sob o peso do fruto */
+{ const sc = mkScene('#10281d'); scene(sc, 40.1, 46.5);
+  ground(sc, GY, '#2c7a4b', '#0f2a1a', '#3a9a5f');
+  const J = {x:540, y:GY - 236};
+  const trunk = O(sc, '<svg width="120" height="360" viewBox="0 0 120 360"><path d="M38 360C44 270 40 200 28 120L92 120C80 200 76 270 82 360Z" fill="url(#gTrunk)"/><circle cx="60" cy="104" r="62" fill="url(#gLeaf)"/></svg>', 120, 360, 540, GY + 4); hide(trunk); pop(trunk, 40.2, 1, .5);
+  const br = (side) => `<svg width="380" height="230" viewBox="0 0 380 230" style="transform:scaleX(${side})"><path d="M0 118C110 118 210 92 310 102" stroke="#7a4a2a" stroke-width="30" stroke-linecap="round" fill="none"/><g fill="url(#gLeaf)"><circle cx="330" cy="92" r="72"/><circle cx="270" cy="60" r="56"/><circle cx="290" cy="130" r="50"/></g></svg>`;
+  const bR = O(sc, br(1), 380, 230, J.x + 190, J.y, {a:'c', origin:'0% 50%'}); const bL = O(sc, br(-1), 380, 230, J.x - 190, J.y, {a:'c', origin:'100% 50%'});
+  [bR, bL].forEach(b => gsap.set(b, {scale:0, autoAlpha:0}));
+  gsap.set(bR, {rotation:-52}); gsap.set(bL, {rotation:52});
+  pop(bR, 40.35, 1, .5); pop(bL, 40.45, 1, .5);
+  const tip = (rot, side) => { const r = rot*Math.PI/180; return {x:J.x + side*Math.cos(r)*320, y:J.y + Math.sin(r)*320}; };
+  const fr = [1, -1].map(side => { const f = O(sc, SV.fruit, 130, 150, 540, GY, {a:'c'}); hide(f); return f; });
+  const place = (f, side, rot, dy) => { const p = tip(rot*side, side); return {x:p.x - 540, y:p.y + dy - GY}; };
+  fr.forEach((f, i) => { const side = i ? -1 : 1; const p0 = place(f, side, -52, 85);
+    gsap.set(f, {x:p0.x, y:p0.y, scale:0});
+    tl.to(f, {scale:.55, autoAlpha:1, duration:.4, ease:'back.out(2)'}, 41.0 + i*.1);
+    const p1 = place(f, side, 20, 85); tl.to(f, {x:p1.x, y:p1.y, duration:.9, ease:'elastic.out(1,.6)'}, t0(79)); });
+  tl.to(bR, {rotation:20, duration:.9, ease:'elastic.out(1,.6)'}, t0(79)); tl.to(bL, {rotation:-20, duration:.9, ease:'elastic.out(1,.6)'}, t0(79));
+  tl.to(fr, {scale:1.0, duration:.6, ease:'power2.out'}, t0(85));
+  const p2 = place(null, 1, 34, 120);
+  tl.to(bR, {rotation:34, duration:.5, ease:'power2.out'}, t0(87) - .1); tl.to(bL, {rotation:-34, duration:.5, ease:'power2.out'}, t0(87) - .1);
+  tl.to(fr[0], {x:p2.x, y:p2.y, scale:1.25, duration:.5, ease:'power2.out'}, t0(87) - .1); tl.to(fr[1], {x:-p2.x, y:p2.y, scale:1.25, duration:.5, ease:'power2.out'}, t0(87) - .1);
+  sparkles(sc, 540, 600, t0(77), 8, 330);
+}
+/* 10 · o fruto é para servir */
+{ const sc = mkScene('#2a1a12'); scene(sc, 46.5, 51.1);
+  ground(sc, 1110, '#6e4527', '#2a170c', '#3a9a5f');
+  const g = glow(sc, 540, 600, 420, 'rgba(255,170,60,.5)'); gsap.set(g, {autoAlpha:0}); tl.to(g, {autoAlpha:1, duration:.4}, 46.7);
+  const fruit = O(sc, SV.fruit, 130, 150, 540, 600, {a:'c'}); hide(fruit); pop(fruit, 46.65, 2.6, .55);
+  const xs = [140, 340, 540, 740, 940];
+  const ppl = xs.map((x, i) => { const p = O(sc, SV.person, 90, 130, x, 1110, {color: i ? '#f6f4ee' : '#8a8a8a'}); hide(p); pop(p, 46.9 + i*.08, 1.1, .4); return p; });
+  const you = TX(sc, 'você', 140, 1170, 80, '#ff6b6b', 'hand'); hide(you); pop(you, t0(94) - .5, 1, .3);
+  tl.to(fruit, {x:-330, y:360, scale:1.8, duration:.45, ease:'power2.in'}, t0(91));
+  const xr = O(sc, SV.x, 220, 220, 140, 960, {a:'c'}); hide(xr); pop(xr, t0(93) + .15, 1, .3);
+  tl.to(fruit, {x:0, y:0, scale:2.6, duration:.45, ease:'back.out(2)'}, t0(94) + .05);
+  tl.to(xr, {autoAlpha:.9, duration:.01}, t0(94));
+  const minis = [1, 2, 3, 4].map(i => { const f = O(sc, SV.fruit, 130, 150, 540, 600, {a:'c'}); hide(f); return f; });
+  tl.set(minis, {autoAlpha:1, scale:1.1}, t0(98) - .55);
+  tl.to(fruit, {scale:0, autoAlpha:0, duration:.3, ease:'power2.in'}, t0(98) - .55);
+  minis.forEach((f, i) => { const tx = xs[i + 1] - 540;
+    tl.to(f, {x:tx, y:230 + (i%2)*20, scale:.8, duration:.75, ease:'power2.inOut'}, t0(98) - .5 + i*.08);
+    const h = O(sc, SV.heart, 90, 80, xs[i + 1], 820, {a:'c'}); hide(h); pop(h, t0(98) + .5 + i*.1, .9, .4); tl.to(h, {y:-30, duration:.7, yoyo:true, repeat:2, ease:'sine.inOut'}, t0(98) + .9 + i*.1); });
+}
+/* 11 · pequenos começos */
+{ const sc = mkScene('#10281d'); scene(sc, 51.1, 54.6);
+  ground(sc, GY, '#2c7a4b', '#0f2a1a', '#3a9a5f');
+  const g = glow(sc, 540, 900, 420, 'rgba(120,255,170,.4)'); gsap.set(g, {autoAlpha:0}); tl.to(g, {autoAlpha:1, duration:.5}, 51.3);
+  const tr = O(sc, SV.tree, 450, 560, 540, GY + 4); hide(tr);
+  const sp = O(sc, SV.sprout, 200, 320, 540, GY + 4); hide(sp); pop(sp, 51.3, .55, .5);
+  tl.to(sp, {scale:.85, duration:.6, ease:'power2.out'}, t0(103) - .1);
+  tl.to(sp, {scale:0, autoAlpha:0, duration:.3, ease:'power2.in'}, t0(104));
+  tl.fromTo(tr, {scale:.1, autoAlpha:0}, {scale:1.5, autoAlpha:1, duration:.9, ease:'elastic.out(1,.55)', immediateRender:false}, t0(104) + .05);
+  sparkles(sc, 540, 700, t0(104) + .1, 10, 360);
+}
+/* 12 · CTA */
+{ const sc = mkScene('#0a1a2a'); scene(sc, 54.6, 60);
+  const gl = glow(sc, 540, 760, 700, 'rgba(255,200,61,.22)');
+  const flakes = []; for (let i = 0; i < 46; i++){ const s = 8 + (i*7)%22, d = document.createElement('div'); d.className = 'o';
+    d.style.cssText = `left:${(i*83)%1080}px;top:-40px;width:${s}px;height:${s}px;border-radius:50%;background:#fff;opacity:${.35 + (i%4)*.15}`; sc.appendChild(d); flakes.push(d);
+    tl.fromTo(d, {y:0, x:0}, {y:2000, x:(i%2 ? 70 : -70), duration:3.6 + (i%5)*.5, ease:'none'}, 54.6 + (i%9)*.18); }
+  const tr = O(sc, SV.tree, 450, 560, 540, 470); hide(tr); pop(tr, 54.8, .5, .7, 'elastic.out(1,.6)');
+  const l1 = TX(sc, 'SIGA E', 540, 600, 200, '#ffffff'); const l2 = TX(sc, 'VISITE', 540, 830, 280, '#ffc83d');
+  [l1, l2].forEach((l, i) => { hide(l); pop(l, 55.0 + i*.22, 1, .5); });
+  const n1 = TX(sc, 'IGREJA', 540, 1060, 110, '#ffffff'); const n2 = TX(sc, 'BOLA DE NEVE', 540, 1200, 170, '#bfe6ff'); const n3 = TX(sc, 'JARAGUÁ', 540, 1345, 140, '#ffc83d');
+  [n1, n2, n3].forEach((l, i) => { hide(l); pop(l, 55.7 + i*.18, 1, .5); });
+  const p1 = TX(sc, 'SEGUIR', 330, 1560, 78, '#1a1205'); p1.style.cssText += ';background:#ffc83d;padding:26px 56px;border-radius:80px';
+  const p2 = TX(sc, 'VISITE-NOS', 740, 1560, 78, '#fff'); p2.style.cssText += ';border:6px solid #fff;padding:20px 50px;border-radius:80px';
+  [p1, p2].forEach((p, i) => { hide(p); pop(p, 56.5 + i*.15, 1, .5); tl.to(p, {scale:1.08, duration:.45, yoyo:true, repeat:5, ease:'sine.inOut'}, 57.2 + i*.2); });
+  const hn = TX(sc, 'venha plantar suas raízes!', 540, 1700, 84, '#ffe08a', 'hand'); gsap.set(hn, {rotation:-3}); hide(hn); pop(hn, 57.0, 1, .5);
+}
+
+/* ---------- legendas ---------- */
+const CH = [[0,2],[3,5],[6,8],[9,12],[13,16],[17,19],[20,22],[23,24],[25,27],[28,30],[31,33],[34,35],[36,36],[37,39],[40,41],[42,44],[45,47],[48,51],[52,54],[55,56],[57,58],[59,62],[63,65],[66,67],[68,70],[71,73],[74,77],[78,79],[80,82],[83,85],[86,87],[88,90],[91,94],[95,98],[99,100],[101,104]];
+const EM = {12:'#ffc83d',16:'#e8954f',19:'#ffc83d',23:'#43d17a',24:'#ff6b6b',27:'#ffc83d',30:'#43d17a',35:'#ff6b6b',39:'#43d17a',41:'#8fb8ff',50:'#ffc83d',54:'#ffc83d',56:'#7cc4ff',58:'#ff6b6b',62:'#ffc83d',65:'#c2a98a',67:'#ff6b6b',70:'#ff9a57',77:'#43d17a',79:'#43d17a',87:'#ffc83d',90:'#ffb43f',98:'#ffc83d',103:'#ffc83d',104:'#43d17a'};
+const cap = $('#cap');
+CH.forEach(([a, b], ci) => {
+  const el = document.createElement('div'); el.className = 'chunk';
+  const chars = TXT.slice(a, b + 1).join(' ').length;
+  const base = chars <= 13 ? 140 : chars <= 19 ? 122 : 104;
+  el.style.fontSize = base + 'px'; cap.appendChild(el);
+  const ws = [];
+  for (let i = a; i <= b; i++){
+    const w = document.createElement('span'); w.className = 'w'; w.textContent = TXT[i];
+    if (EM[i]){ w.style.color = EM[i]; w.style.fontSize = '1.32em'; w.style.textShadow = `0 6px 0 rgba(0,0,0,.55),0 0 34px ${EM[i]}88`; }
+    el.appendChild(w); ws.push([w, i]);
+  }
+  gsap.set(ws.map(x => x[0]), {autoAlpha:.16, scale:.8, y:10});
+  const show = t0(a) - .05, nxt = CH[ci + 1] ? t0(CH[ci + 1][0]) - .03 : 99;
+  const hideAt = Math.min(nxt - .03, t1(b) + .55);
+  tl.set(el, {autoAlpha:1}, show);
+  ws.forEach(([w, i]) => {
+    if (EM[i]){ gsap.set(w, {rotation:(i%2 ? -5 : 5)}); tl.to(w, {autoAlpha:1, scale:1, y:0, rotation:0, duration:.5, ease:'elastic.out(1,.5)'}, t0(i) - .02); punch(t0(i)); }
+    else tl.to(w, {autoAlpha:1, scale:1, y:0, duration:.2, ease:'back.out(3)'}, t0(i) - .02);
+  });
+  tl.to(el, {autoAlpha:0, duration:.05}, hideAt);
+});
+tl.fromTo('#pb', {scaleX:0}, {scaleX:1, duration:60, ease:'none'}, 0);
+tl.set({}, {}, 60);
+
+/* ---------- controlo ---------- */
+const au = $('#au'), st = $('#start'), q = new URLSearchParams(location.search);
+function play(){ st.style.display = 'none'; au.currentTime = 0; au.play().catch(() => {}); tl.play(0); }
+if (q.has('t') || q.has('render')){
+  st.style.display = 'none';
+  const tt = parseFloat(q.get('t') || 0); for (let x = 0; x < tt; x += .04) tl.time(x); tl.time(tt); tl.pause();
+} else {
+  st.addEventListener('click', play);
+  tl.eventCallback('onComplete', () => { st.querySelector('b').textContent = 'Rever'; st.style.display = 'flex'; });
+  gsap.ticker.add(() => { if (!au.paused && tl.isActive() && Math.abs(au.currentTime - tl.time()) > .15) tl.time(au.currentTime, false); });
+}
+</script>
+</body>
+</html>
