@@ -42,6 +42,6 @@ Você vende muito. Mas quanto fica? Concorrente do lado, comissão, frete, anún
 | 18–25 s | Moedas e margem | Moedas douradas com "R$" saindo de uma caixa aberta, fundo azul-marinho, 3D suave, sem texto |
 | 25–30 s | Fechamento | Caixa creme com fita laranja sobre fundo laranja, com espaço livre embaixo para o nome e o botão |
 
-Cenas 1, 2, 3 e 6 ainda não existem em alta resolução. A caixa laranja e a camiseta e a cliente já estão na pasta `assets/`.
+As imagens de produto e de cliente já estão na pasta `assets/` (`camiseta.jpg` e `cliente.jpg`). As demais ainda não foram geradas; a caixa laranja existe no seu Canva, mas não foi salva no repositório.
 
 **Dica de montagem no Canva:** use o tamanho Story 1080×1920, uma página por cena, e a mesma paleta do vídeo: creme `#FFF4E6`, tinta `#111827`, laranja `#FF5A1F` e amarelo `#FFE600`. Fonte sugerida: Bricolage Grotesque.
