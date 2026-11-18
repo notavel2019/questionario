@@ -60,7 +60,7 @@ html,body{height:100%;background:#0b0b0f;overflow:hidden}
 #cart{position:relative;width:54px;height:54px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;justify-content:center;font-size:26px}
 #badge{position:absolute;right:-6px;top:-8px;width:30px;height:30px;border-radius:50%;background:var(--org);color:#fff;font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center}
 #prod{position:absolute;left:26px;right:26px;top:134px;height:310px;border-radius:30px;background:linear-gradient(160deg,#FFE9D6,#FFD2B0);overflow:hidden}
-#tee{position:absolute;left:100px;top:34px;width:240px;height:240px;background:var(--org);clip-path:polygon(24% 0,38% 7%,62% 7%,76% 0,100% 22%,86% 40%,76% 32%,76% 100%,24% 100%,24% 32%,14% 40%,0 22%)}
+#tee{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 50%}
 #pname{position:absolute;left:30px;top:466px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:36px}
 #pprice{position:absolute;left:30px;top:514px;font-weight:700;font-size:38px;color:var(--org)}
 #buy{position:absolute;left:26px;right:26px;top:580px;height:96px;border-radius:28px;background:var(--ink);color:#fff;font-weight:700;font-size:38px;display:flex;align-items:center;justify-content:center;transform-origin:50% 50%}
@@ -68,9 +68,9 @@ html,body{height:100%;background:#0b0b0f;overflow:hidden}
 #r1{top:704px;background:var(--org);color:#fff}
 #r2{top:802px;border:4px dashed var(--ink);color:var(--ink);background:#FFF4E6}
 #toast{position:absolute;left:18px;right:18px;top:16px;height:112px;border-radius:30px;background:var(--ink);color:#fff;display:flex;align-items:center;gap:16px;padding:0 22px}
-#toast .av{width:68px;height:68px;border-radius:50%;background:var(--yel);color:var(--ink);font-weight:800;font-size:34px;display:flex;align-items:center;justify-content:center;flex:none}
+#toast .av{object-fit:cover;width:68px;height:68px;border-radius:50%;background:var(--yel);color:var(--ink);font-weight:800;font-size:34px;display:flex;align-items:center;justify-content:center;flex:none}
 #toast b{display:block;font-size:30px}
-#toast span{font-size:24px;color:#cbd5e1}
+#toast span{font-size:23px;white-space:nowrap;color:#cbd5e1}
 #cursor{position:absolute;left:0;top:0;width:70px;height:70px;transform-origin:6px 4px;z-index:5}
 /* margem */
 #pct{position:absolute;left:0;width:1080px;top:560px;text-align:center;font-weight:800;font-size:340px;line-height:1;letter-spacing:-6px;color:#7b8498}
@@ -128,13 +128,13 @@ html,body{height:100%;background:#0b0b0f;overflow:hidden}
 
     <div id="phone"><div id="screen">
       <div id="ph-top"><div class="mono" id="pmono" style="width:60px;height:60px;font-size:26px">RW</div><div class="nm" id="pnm">Rogério Wilbert</div><div id="cart">🛒<div id="badge">1</div></div></div>
-      <div id="prod"><div id="tee"></div></div>
+      <div id="prod"><img id="tee" src="assets/camiseta.jpg" alt=""></div>
       <div id="pname">Camiseta Essencial</div>
       <div id="pprice">R$ 129,90</div>
       <div id="buy"><span id="buyt">Comprar</span></div>
       <div class="rule" id="r1">Frete grátis acima de R$ 199</div>
       <div class="rule" id="r2">Cupom BEMVINDO10</div>
-      <div id="toast"><div class="av">A</div><div><b>Ana comprou · R$ 129,90</b><span>Cliente cadastrado na sua loja</span></div></div>
+      <div id="toast"><img class="av" src="assets/cliente.jpg" alt=""><div><b>Ana comprou</b><span>R$ 129,90 · cliente na sua loja</span></div></div>
     </div></div>
     <svg id="cursor" viewBox="0 0 70 70"><path d="M8 4 L8 52 L21 41 L30 62 L40 57 L31 37 L49 37 Z" fill="#111827" stroke="#fff" stroke-width="5" stroke-linejoin="round"/></svg>
   </div>
