@@ -1,0 +1,99 @@
+1
+00:00:00,300 --> 00:00:02,880
+Se o campeão de vendas dá prejuízo,
+
+2
+00:00:02,920 --> 00:00:05,000
+você vê os pedidos entrando,
+
+3
+00:00:05,280 --> 00:00:06,500
+comemora o faturamento,
+
+4
+00:00:07,000 --> 00:00:09,780
+mas quanto sobra em cada venda?
+
+5
+00:00:10,520 --> 00:00:14,640
+Eu abriria a planilha do produto
+que mais vende antes de comemorar.
+
+6
+00:00:15,120 --> 00:00:15,860
+Olha este exemplo.
+
+7
+00:00:16,300 --> 00:00:17,800
+O produto vende por 100 reais,
+
+8
+00:00:18,300 --> 00:00:21,140
+mas esses 100 reais ainda precisam
+pagar muita coisa.
+
+9
+00:00:21,940 --> 00:00:25,220
+Vamos descontar 45 do custo do produto,
+
+10
+00:00:25,920 --> 00:00:28,300
+20 das taxas da plataforma,
+
+11
+00:00:28,580 --> 00:00:29,600
+10 do frete,
+
+12
+00:00:29,640 --> 00:00:33,120
+8 dos anúncios e 7 dos impostos.
+
+13
+00:00:33,400 --> 00:00:39,780
+E esse valor ainda precisa ajudar a pagar
+as despesas fixas da operação,
+antes de virar lucro.
+
+14
+00:00:40,800 --> 00:00:44,740
+Agora, imagina dar mais 5 reais
+de desconto para vender mais.
+
+15
+00:00:45,480 --> 00:00:49,120
+Você acabou de cortar pela metade
+o que sobrava nessa venda.
+
+16
+00:00:49,360 --> 00:00:55,100
+Por isso, eu começaria investigando o custo
+que mais pesa e o que consigo ajustar.
+
+17
+00:00:55,180 --> 00:01:00,600
+Comprar da mercadoria, embalagem,
+frete, anúncios ou o próprio preço.
+
+18
+00:01:01,040 --> 00:01:06,680
+É essa análise que eu faço na consultoria de
+precificação usando a planilha ou o cálculo exato.
+
+19
+00:01:07,080 --> 00:01:11,440
+Entender quanto sobra e encontrar
+espaço para melhorar a margem.
+
+20
+00:01:11,900 --> 00:01:16,120
+Porque o produto que mais vende também precisa
+contribuir para sustentar o seu negócio.
+
+21
+00:01:16,820 --> 00:01:19,800
+Me chama no Direct, no @rogeriowilbert e me conta.
+
+22
+00:01:19,900 --> 00:01:25,340
+Qual produto vende bem, mas deixa você
+na dúvida na hora de calcular a margem?
