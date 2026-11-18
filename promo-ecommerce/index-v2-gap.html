@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="pt-BR">
+<!-- Gerado com a skill bang-motion (Bang Tutorial, MIT). 9:16 · 1080x1920 · 31 s. Versão 2: imagens do Canva + sincronizado com a narração. ?debug=1 = scrub · ?clean=1 = sem autoplay · R reinicia · Espaço pausa -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Venda na sua loja — Rogério Wilbert</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+:root{--cream:#FFF4E6;--ink:#111827;--org:#FF5A1F;--yel:#FFE600}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0b0b0f;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;overflow:hidden;background:var(--cream);font-family:'Bricolage Grotesque','DM Sans',sans-serif;color:var(--ink)}
+.f{position:absolute;inset:0;will-change:transform}
+#f0{background:radial-gradient(900px 900px at 30% 25%,#FFFBF3,#FFF4E6 55%,#FBE5CB)}
+#f1{background:linear-gradient(165deg,#233d85,#1b2f6f 55%,#132462)}
+#f2{background:radial-gradient(1000px 900px at 70% 20%,#FF7B3F,#FF5A1F 55%,#E8470F)}
+#f3{background:radial-gradient(900px 900px at 25% 20%,#FFFBF3,#FFF4E6 55%,#F9DFC2)}
+#f4{background:linear-gradient(165deg,#1d2638,#111827 55%,#0a0f19)}
+#f5{background:radial-gradient(1000px 900px at 30% 20%,#FF7B3F,#FF5A1F 55%,#E8470F)}
+.lead{position:absolute;inset:0}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);will-change:transform}
+#grain{position:absolute;inset:-300px;opacity:.22;mix-blend-mode:overlay;pointer-events:none;
+ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.2 -.1'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>")}
+#cam{position:absolute;inset:0;transform-origin:540px 960px}
+#crowd{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:50% 50%;opacity:0}
+/* caixa (imagens do Canva recortadas) */
+#box{position:absolute;left:260px;top:680px;width:560px;height:560px;transform-origin:50% 55%}
+#box .shadow{position:absolute;left:70px;right:70px;bottom:-6px;height:44px;border-radius:50%;background:rgba(17,24,39,.28);filter:blur(14px)}
+#box img.bx{position:absolute;left:0;width:560px}
+#boxA{top:26px}
+#boxB{top:0;opacity:0}
+#boxOpen{position:absolute;left:220px;top:833px;width:640px;transform-origin:50% 100%;opacity:0}
+#tag{position:absolute;left:370px;top:-44px;width:250px;height:112px;background:#fff;border-radius:18px;transform:rotate(7deg);box-shadow:0 8px 0 rgba(17,24,39,.2);padding:12px 18px;transform-origin:0 100%}
+#tag small{display:block;font-family:'DM Sans',sans-serif;font-weight:700;font-size:24px;color:#6b7280}
+#tag strong{display:block;font-size:62px;font-weight:800;line-height:1;margin-top:4px;color:var(--ink)}
+.chip{position:absolute;left:-10px;width:580px;height:84px;border-radius:42px;background:var(--yel);font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:42px;display:flex;align-items:center;justify-content:center;color:var(--ink);box-shadow:0 7px 0 rgba(0,0,0,.28)}
+/* celular */
+#phone{position:absolute;left:280px;top:690px;width:520px;height:940px;background:#0b0f19;border-radius:68px;padding:14px;box-shadow:0 40px 60px rgba(17,24,39,.28),0 0 0 3px #1f2937}
+#screen{position:relative;width:100%;height:100%;background:#fff;border-radius:54px;overflow:hidden;font-family:'DM Sans',sans-serif}
+.mono{width:62px;height:62px;border-radius:18px;background:var(--org);color:#fff;font-weight:800;font-size:28px;display:flex;align-items:center;justify-content:center;flex:none;font-family:'Bricolage Grotesque',sans-serif}
+#ph-top{position:absolute;left:0;right:0;top:0;height:120px;display:flex;align-items:center;gap:14px;padding:30px 26px 0}
+#ph-top .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:31px;flex:1}
+#cart{position:relative;width:54px;height:54px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;justify-content:center;font-size:26px}
+#badge{position:absolute;right:-6px;top:-8px;width:30px;height:30px;border-radius:50%;background:var(--org);color:#fff;font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center}
+#prod{position:absolute;left:26px;right:26px;top:134px;height:310px;border-radius:30px;background:linear-gradient(160deg,#FFE9D6,#FFD2B0);overflow:hidden}
+#tee{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 50%}
+#pname{position:absolute;left:30px;top:466px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:36px}
+#pprice{position:absolute;left:30px;top:514px;font-weight:700;font-size:38px;color:var(--org)}
+#buy{position:absolute;left:26px;right:26px;top:580px;height:96px;border-radius:28px;background:var(--ink);color:#fff;font-weight:700;font-size:38px;display:flex;align-items:center;justify-content:center;transform-origin:50% 50%}
+.rule{position:absolute;left:26px;right:26px;height:84px;border-radius:24px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:30px}
+#r1{top:704px;background:var(--org);color:#fff}
+#r2{top:802px;border:4px dashed var(--ink);color:var(--ink);background:#FFF4E6}
+#toast{position:absolute;left:18px;right:18px;top:16px;height:112px;border-radius:30px;background:var(--ink);color:#fff;display:flex;align-items:center;gap:16px;padding:0 22px}
+#toast .av{width:68px;height:68px;border-radius:50%;object-fit:cover;flex:none}
+#toast b{display:block;font-size:30px}
+#toast span{font-size:23px;white-space:nowrap;color:#cbd5e1}
+#cursor{position:absolute;left:0;top:0;width:70px;height:70px;transform-origin:6px 4px;z-index:5}
+/* margem */
+#pct{position:absolute;left:0;width:1080px;top:470px;text-align:center;font-weight:800;font-size:340px;line-height:1;letter-spacing:-6px;color:#9aa3b8;z-index:3}
+#burst{position:absolute;left:140px;top:1050px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(255,230,0,.95),rgba(255,90,31,.55) 45%,rgba(255,90,31,0) 70%)}
+.coin{position:absolute;left:0;top:0;width:78px;height:78px;border-radius:50%;background:var(--yel);border:6px solid var(--ink);color:var(--ink);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 28px rgba(255,230,0,.55)}
+#txt{position:absolute;inset:0;pointer-events:none}
+.t{position:absolute;left:30px;width:1020px;text-align:center;font-weight:700;line-height:1.0;letter-spacing:-2px;white-space:pre;opacity:0;visibility:hidden;transform-origin:50% 50%}
+.t.ink{color:var(--ink)}.t.crm{color:var(--cream)}
+.foot{font-family:'DM Sans',sans-serif;font-weight:500;font-size:30px;letter-spacing:0;line-height:1.2}
+#cta{position:absolute;left:150px;width:780px;top:1330px;height:128px;border-radius:64px;background:var(--ink);color:var(--cream);font-weight:700;font-size:62px;letter-spacing:-1px;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 0 rgba(17,24,39,.22);visibility:hidden}
+#ui{position:fixed;left:10px;right:10px;bottom:10px;display:none;color:#fff;font:14px monospace;z-index:9}
+#ui.on{display:flex;gap:10px;align-items:center}#ui input{flex:1}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="fields">
+    <div class="f" id="f0"></div>
+    <div class="f lead" id="l1" style="background:var(--yel)"></div><div class="f" id="f1"></div>
+    <div class="f lead" id="l2" style="background:var(--cream)"></div><div class="f" id="f2"></div>
+    <div class="f" id="f3"></div>
+    <div class="f lead" id="l4" style="background:var(--yel)"></div><div class="f" id="f4"></div>
+    <div class="f lead" id="l5" style="background:var(--cream)"></div><div class="f" id="f5"></div>
+  </div>
+  <div class="blob" id="b1" style="left:-200px;top:300px;width:620px;height:620px"></div>
+  <div class="blob" id="b2" style="left:620px;top:1100px;width:560px;height:560px"></div>
+  <div class="blob" id="b3" style="left:300px;top:1500px;width:480px;height:480px"></div>
+  <div id="grain"></div>
+
+  <div id="cam">
+    <img id="crowd" src="assets/cena2-concorrentes.png" alt="">
+    <div id="burst"></div>
+    <div id="coins"></div>
+
+    <div id="box">
+      <div class="shadow"></div>
+      <img class="bx" id="boxA" src="assets/box-marketplace.png" alt="">
+      <img class="bx" id="boxB" src="assets/box-marca.png" alt="">
+      <div id="tag"><small>preço de venda</small><strong id="price">R$ 100</strong></div>
+      <div class="chip" id="c1" style="top:600px">−16% comissão</div>
+      <div class="chip" id="c2" style="top:704px">−R$ 13 frete</div>
+      <div class="chip" id="c3" style="top:808px">−R$ 14 anúncios</div>
+    </div>
+    <img id="boxOpen" src="assets/box-aberta-moedas.png" alt="">
+
+    <div id="pct">12%</div>
+
+    <div id="phone"><div id="screen">
+      <div id="ph-top"><div class="mono" id="pmono" style="width:60px;height:60px;font-size:26px">RW</div><div class="nm" id="pnm">Rogério Wilbert</div><div id="cart">🛒<div id="badge">1</div></div></div>
+      <div id="prod"><img id="tee" src="assets/camiseta.jpg" alt=""></div>
+      <div id="pname">Camiseta Essencial</div>
+      <div id="pprice">R$ 129,90</div>
+      <div id="buy"><span id="buyt">Comprar</span></div>
+      <div class="rule" id="r1">Frete grátis acima de R$ 199</div>
+      <div class="rule" id="r2">Cupom BEMVINDO10</div>
+      <div id="toast"><img class="av" src="assets/cliente.jpg" alt=""><div><b>Ana comprou</b><span>R$ 129,90 · cliente na sua loja</span></div></div>
+    </div></div>
+    <svg id="cursor" viewBox="0 0 70 70"><path d="M8 4 L8 52 L21 41 L30 62 L40 57 L31 37 L49 37 Z" fill="#111827" stroke="#fff" stroke-width="5" stroke-linejoin="round"/></svg>
+  </div>
+
+  <div id="txt"></div>
+  <div id="cta">Crie sua loja própria</div>
+</div>
+<div id="ui"><button id="pl">▶/❚❚</button><input id="sc" type="range" min="0" max="31" step="0.01" value="0"><span id="tm">0.00</span></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const W=1080,H=1920,DURATION=31, Q=new URLSearchParams(location.search);
+const stage=$('#stage');
+function fit(){const s=Math.min(innerWidth/W,innerHeight/H);stage.style.transform='scale('+s+')';stage.style.left=((innerWidth-W*s)/2)+'px';stage.style.top=((innerHeight-H*s)/2)+'px';}
+addEventListener('resize',fit);fit();
+
+/* moedas (determinístico) */
+const NC=16, COINS=[];
+for(let i=0;i<NC;i++){const d=document.createElement('div');d.className='coin';d.textContent='R$';$('#coins').appendChild(d);
+ const a=(Math.sin(i*12.9898)*43758.5453)%1, b=(Math.sin(i*78.233)*12345.678)%1, c=(Math.sin(i*39.346)*9876.54)%1;
+ COINS.push({el:d,vx:(Math.abs(a)-.5)*900,vy:-(1050+Math.abs(b)*750),rv:(Math.abs(c)-.5)*700,off:i*.11});}
+
+/* texto — tempos sincronizados com a narração */
+const LINES=[
+ ['L1','Você vende muito','ink',250,128,.45,1.95,0,-1],
+ ['L2','Mas quanto\nfica?','ink',215,200,2.4,3.5,0,1],
+ ['L3','Concorrente\nao lado','crm',230,150,4.5,5.8,-1,1],
+ ['L4','Comissão','crm',280,185,5.85,6.95,1,-1],
+ ['L5','Frete','crm',280,200,7.0,8.0,-1,1],
+ ['L6','Anúncios','crm',280,185,8.0,9.3,1,-1],
+ ['L6b','Sua margem\nsome','crm',250,150,9.35,11.0,0,1],
+ ['L7','E se a venda\nfosse sua?','ink',215,168,11.75,13.1,0,1],
+ ['L8','Sua marca','ink',215,165,13.45,14.75,-1,1],
+ ['L9','Seu cliente','ink',215,165,14.75,16.05,1,-1],
+ ['L10','Sua regra','ink',215,165,16.05,17.4,-1,1],
+ ['L11','A margem volta\npra você','crm',215,122,18.1,24.65,0,1],
+ ['L12','Rogério\nWilbert','ink',640,150,25.3,31.5,0,1],
+ ['L13','Plataforma de vendas\ncom WooCommerce','ink',1010,60,26.4,31.5,0,-1],
+ ['L14','@rogeriowilbert','ink',1520,64,29.5,31.5,0,1]];
+LINES.forEach(L=>{const d=document.createElement('div');d.className='t '+L[2];d.id=L[0];d.textContent=L[1];
+ d.style.top=L[3]+'px';d.style.fontSize=L[4]+'px';$('#txt').appendChild(d);});
+['F1','F2'].forEach(id=>{const d=document.createElement('div');d.className='t foot crm';d.id=id;d.style.top='1810px';d.textContent='valores ilustrativos';$('#txt').appendChild(d);});
+
+const tl=gsap.timeline({paused:true});
+const EO='power3.out';
+gsap.set(['#f1','#l1'],{y:-H}); gsap.set(['#f2','#l2'],{x:-W}); gsap.set(['#f3'],{y:H});
+gsap.set(['#f4','#l4'],{y:-H}); gsap.set(['#f5','#l5'],{x:W});
+gsap.set('#box',{y:-1100,rotation:-8});
+gsap.set('#tag',{scale:0});
+gsap.set('#phone',{autoAlpha:0});
+gsap.set('#cursor',{x:900,y:1560,autoAlpha:0});
+gsap.set('#toast',{y:-160});
+gsap.set(['#r1','#r2'],{x:700,autoAlpha:0});
+gsap.set(['#c1','#c2','#c3'],{scale:0,y:50});
+gsap.set(['#pmono','#pnm','#cart'],{scale:0,autoAlpha:0});
+gsap.set('#badge',{scale:0});
+gsap.set('#pct',{autoAlpha:0});gsap.set('#coins',{autoAlpha:0});
+gsap.set('#burst',{scale:0,autoAlpha:0});
+gsap.set('#cta',{y:80,autoAlpha:0});
+gsap.set('#boxA',{opacity:1});
+gsap.set('#b1',{backgroundColor:'#FF5A1F',opacity:.22});
+gsap.set('#b2',{backgroundColor:'#FFE600',opacity:.35});
+gsap.set('#b3',{backgroundColor:'#FF5A1F',opacity:.12});
+
+function say(id,t0,t1,dx,dy){
+ tl.fromTo('#'+id,{autoAlpha:0,x:dx*90,y:dy*70,scaleY:1.18,filter:'blur(18px)'},{autoAlpha:1,x:0,y:0,scaleY:1,filter:'blur(0px)',duration:.6,ease:EO,immediateRender:true},t0);
+ if(t1<31) tl.to('#'+id,{autoAlpha:0,x:-dx*40,y:-dy*50,scaleY:1.12,filter:'blur(14px)',duration:.32,ease:'power2.in'},t1-.32);}
+LINES.forEach(L=>say(L[0],L[5],L[6],L[7],L[8]));
+tl.to('#F1',{autoAlpha:.7,duration:.4},4.3).to('#F1',{autoAlpha:0,duration:.3},10.7);
+tl.to('#F2',{autoAlpha:.7,duration:.4},21.0).to('#F2',{autoAlpha:0,duration:.3},24.4);
+
+function cam(t,d,s,tx,ty,ease){tl.to('#cam',{scale:s,x:(540-tx)*s,y:(960-ty)*s,duration:d,ease:ease||'power3.inOut'},t);}
+
+/* 0–3,5 s · gancho */
+tl.to('#box',{y:0,rotation:0,duration:.75,ease:'bounce.out'},.15);
+tl.to('#tag',{scale:1,duration:.7,ease:'elastic.out(1,.5)'},1.0);
+cam(2.5,.8,1.5,735,820);
+/* faixa de tinta cai */
+tl.to('#l1',{y:0,duration:.55,ease:'power4.inOut'},3.5).to('#f1',{y:0,duration:.55,ease:'power4.inOut'},3.6);
+cam(3.5,.6,1,540,960);
+/* 3,6–11 s · problema */
+tl.fromTo('#crowd',{opacity:0,scale:1.3},{opacity:1,scale:1,duration:1.2,ease:'power3.out',immediateRender:true},3.9);
+tl.to('#crowd',{scale:1.06,duration:6.5,ease:'sine.inOut'},5.1);
+['#c1','#c2','#c3'].forEach((c,i)=>tl.to(c,{scale:1,y:0,duration:.55,ease:'elastic.out(1,.55)'},[6.0,7.15,8.1][i]));
+[6.0,7.15,8.1].forEach(t=>tl.fromTo('#tag',{scale:1.14},{scale:1,duration:.35,ease:'back.out(3)',immediateRender:false},t+.35));
+cam(5.85,.5,1.2,640,980);cam(9.3,.5,1,540,960);
+tl.to('#tag',{rotation:'+=5',duration:.12,yoyo:true,repeat:5,ease:'sine.inOut'},9.5);
+/* virada (laranja da esquerda) */
+['#c1','#c2','#c3'].forEach((c,i)=>tl.to(c,{scale:0,y:60,duration:.3,ease:'power2.in'},10.8+i*.05));
+tl.to('#l2',{x:0,duration:.5,ease:'power4.inOut'},11.05).to('#f2',{x:0,duration:.5,ease:'power4.inOut'},11.15);
+tl.to('#crowd',{opacity:0,duration:.4},11.3);
+tl.to('#tag',{scale:0,duration:.3,ease:'back.in(2)'},11.2);
+tl.to('#boxA',{opacity:0,duration:.25},11.5).to('#boxB',{opacity:1,duration:.25},11.5);
+tl.to('#box',{scale:1.14,duration:.35,ease:'back.out(3)'},11.55).to('#box',{scale:1,duration:.5,ease:'power2.out'},11.95);
+cam(11.5,.9,1.2,540,980);cam(12.4,.8,1,540,960);
+/* 12,8–17,9 s · loja própria */
+tl.to('#f3',{y:0,duration:.6,ease:'power4.inOut'},12.85);
+tl.to('#box',{y:830,scale:.55,duration:.7,ease:'power3.inOut'},12.9);
+tl.set('#phone',{autoAlpha:1},13.1);
+tl.fromTo('#phone',{y:900,scale:.88,rotation:5},{y:0,scale:1,rotation:0,duration:.85,ease:'back.out(1.4)',immediateRender:false},13.1);
+tl.to('#pmono',{scale:1,autoAlpha:1,duration:.55,ease:'elastic.out(1,.5)'},13.85);
+tl.to('#pnm',{scale:1,autoAlpha:1,duration:.4,ease:EO},14.05);
+tl.to('#cart',{scale:1,autoAlpha:1,duration:.4,ease:'back.out(3)'},14.2);
+tl.fromTo('#prod',{y:40,autoAlpha:0},{y:0,autoAlpha:1,duration:.5,ease:EO,immediateRender:true},13.95);
+tl.fromTo('#tee',{rotation:-12,scale:.7},{rotation:0,scale:1,duration:.8,ease:'elastic.out(1,.6)',immediateRender:true},14.1);
+cam(14.55,.7,1.2,540,1130);
+tl.set('#cursor',{autoAlpha:1},14.75);
+tl.to('#cursor',{x:546,y:1326,duration:.65,ease:'power2.inOut'},14.75);
+tl.to('#cursor',{scale:.82,duration:.1},15.42).to('#cursor',{scale:1,duration:.15},15.55);
+tl.to('#buy',{scale:.94,backgroundColor:'#FF5A1F',duration:.1},15.42).to('#buy',{scale:1,duration:.2},15.54);
+tl.set('#buyt',{textContent:'Adicionado ✓'},15.5);
+tl.to('#badge',{scale:1,duration:.5,ease:'elastic.out(1,.5)'},15.6);
+tl.to('#toast',{y:0,duration:.5,ease:'back.out(1.6)'},15.75).to('#toast',{y:-160,duration:.3,ease:'power2.in'},16.5);
+tl.to('#cursor',{autoAlpha:0,duration:.2},15.9);
+cam(16.4,.6,1,540,960);
+tl.to('#r1',{x:0,autoAlpha:1,duration:.5,ease:'back.out(1.6)'},16.2);
+tl.to('#r2',{x:0,autoAlpha:1,duration:.5,ease:'back.out(1.6)'},16.6);
+/* pedido embalado */
+tl.to('#phone',{y:500,scale:.3,duration:.5,ease:'power3.in'},17.1).set('#phone',{autoAlpha:0},17.6);
+tl.fromTo('#box',{scaleY:.55},{scaleY:.5,duration:.12,yoyo:true,repeat:1,ease:'power2.out',immediateRender:false},17.6);
+tl.to('#l4',{y:0,duration:.5,ease:'power4.inOut'},17.45).to('#f4',{y:0,duration:.5,ease:'power4.inOut'},17.55);
+tl.to('#box',{y:600,scale:1,duration:.7,ease:'power3.out'},17.95);
+/* 18–24,7 s · margem */
+tl.to('#pct',{autoAlpha:1,duration:.5,ease:EO},18.7);
+tl.to('#box',{rotation:-2,duration:.25,yoyo:true,repeat:7,ease:'sine.inOut'},18.7);
+tl.to('#boxB',{opacity:0,duration:.08},20.85).fromTo('#boxOpen',{opacity:1,scale:.9},{opacity:1,scale:1,duration:.5,ease:'elastic.out(1,.5)',immediateRender:false},20.85);
+tl.set('#coins',{autoAlpha:1},20.85);
+tl.fromTo('#burst',{scale:.1,autoAlpha:1},{scale:2.4,autoAlpha:0,duration:1.1,ease:'power2.out',immediateRender:false},20.85);
+tl.to('#cam',{scale:1.1,duration:.15,ease:'power3.out'},20.85).to('#cam',{scale:1,duration:.7,ease:'power2.out'},21.0);
+tl.to('#pct',{color:'#FF5A1F',duration:.3},21.0);
+tl.fromTo('#pct',{scale:1},{scale:1.1,duration:.25,yoyo:true,repeat:1,ease:'power2.out',immediateRender:false},23.85);
+cam(24.0,.7,1.06,540,1000,'sine.inOut');
+/* 24,7–31 s · fechamento */
+tl.to('#l5',{x:0,duration:.5,ease:'power4.inOut'},24.7).to('#f5',{x:0,duration:.5,ease:'power4.inOut'},24.8);
+tl.to('#coins',{autoAlpha:0,duration:.3},24.7);tl.to('#pct',{autoAlpha:0,duration:.3},24.7);
+cam(24.7,.5,1,540,960);
+tl.to('#boxOpen',{opacity:0,duration:.01},25.0);
+tl.set('#boxB',{opacity:1},25.0);
+tl.set('#box',{y:-120,scale:.72,rotation:0},25.0);
+tl.fromTo('#box',{y:-300,scale:.55},{y:-530,scale:.72,duration:.7,ease:'back.out(1.8)',immediateRender:false},25.0);
+tl.to('#box',{rotation:3,duration:1.2,yoyo:true,repeat:4,ease:'sine.inOut'},25.9);
+tl.fromTo('#cta',{autoAlpha:0,y:80,scale:.9},{autoAlpha:1,y:0,scale:1,duration:.7,ease:'back.out(1.8)',immediateRender:true},28.85);
+tl.to('#cta',{scale:1.05,duration:.35,yoyo:true,repeat:3,ease:'sine.inOut'},29.8);
+
+tl.to('#b1',{x:260,y:-120,duration:31,ease:'sine.inOut'},0);
+tl.to('#b2',{x:-300,y:-200,duration:31,ease:'sine.inOut'},0);
+tl.to('#b3',{x:200,y:-260,duration:31,ease:'sine.inOut'},0);
+const SEG=[[3.5,'#FFE600',.28,'#7C9BFF',.2,'#FF5A1F',.18],[11.1,'#FFE600',.45,'#FFF4E6',.35,'#FFE600',.3],[12.85,'#FF5A1F',.2,'#FFE600',.32,'#FF5A1F',.12],[17.5,'#FF5A1F',.32,'#FFE600',.14,'#FF5A1F',.2],[24.8,'#FFE600',.45,'#FFF4E6',.35,'#FFE600',.3]];
+SEG.forEach(s=>{tl.to('#b1',{backgroundColor:s[1],opacity:s[2],duration:.5,overwrite:false},s[0]);tl.to('#b2',{backgroundColor:s[3],opacity:s[4],duration:.5,overwrite:false},s[0]);tl.to('#b3',{backgroundColor:s[5],opacity:s[6],duration:.5,overwrite:false},s[0]);});
+tl.to('#stage',{opacity:1,duration:.01},30.99);
+
+/* funções puras do tempo */
+const PRICE=[[0,100],[6.0,100],[6.45,84],[7.15,84],[7.6,71],[8.1,71],[8.55,57],[99,57]];
+function lerpKeys(K,t,ease){for(let i=0;i<K.length-1;i++){if(t>=K[i][0]&&t<K[i+1][0]){const p=(t-K[i][0])/(K[i+1][0]-K[i][0]);const e=ease?ease(p):p;return K[i][1]+(K[i+1][1]-K[i][1])*e;}}return K[K.length-1][1];}
+const eo=p=>1-Math.pow(1-p,3);
+const priceEl=$('#price'),pctEl=$('#pct'),grain=$('#grain');
+function render(t){
+ priceEl.textContent='R$ '+Math.round(lerpKeys(PRICE,t,eo));
+ const pv=t<21.0?12:(t>=23.8?34:12+22*eo((t-21.0)/2.8));
+ pctEl.textContent=Math.round(pv)+'%';
+ const g=Math.floor(t*14);grain.style.transform='translate('+(-((Math.sin(g*91.7)*.5+.5)*280))+'px,'+(-((Math.cos(g*53.3)*.5+.5)*280))+'px)';
+ const live=t>=20.85&&t<=24.8;
+ COINS.forEach(c=>{
+  if(!live||t-20.85-c.off<0){c.el.style.opacity=0;return;}
+  const dt=(t-20.85-c.off)%2.8;
+  const x=540+c.vx*dt, y=1520+c.vy*dt+0.5*2300*dt*dt;
+  const op=dt<2.3?1:Math.max(0,1-(dt-2.3)/.5);
+  c.el.style.opacity=op;c.el.style.transform='translate('+(x-39)+'px,'+(y-39)+'px) rotate('+(c.rv*dt)+'deg)';});
+}
+tl.eventCallback('onUpdate',()=>render(tl.time()));
+tl.eventCallback('onComplete',()=>{tl.play(0);});
+function seek(t){tl.pause();tl.time(t,false);render(tl.time());}
+window.OPENER={tl,DURATION,W,H,seek,ready:false};
+
+if(Q.has('debug')){$('#ui').classList.add('on');const sc=$('#sc'),tm=$('#tm');
+ sc.addEventListener('input',()=>seek(+sc.value));$('#pl').onclick=()=>tl.paused()?tl.play():tl.pause();
+ gsap.ticker.add(()=>{if(!tl.paused()){sc.value=tl.time();}tm.textContent=tl.time().toFixed(2);});}
+addEventListener('keydown',e=>{if(e.key==='r'||e.key==='R')tl.play(0);if(e.code==='Space'){e.preventDefault();tl.paused()?tl.play():tl.pause();}});
+function imgsReady(){return Promise.all($$('img').map(i=>i.complete?Promise.resolve():new Promise(r=>{i.onload=i.onerror=r;})));}
+Promise.all([document.fonts.ready,imgsReady()]).then(()=>{render(0);window.OPENER.ready=true;if(!Q.has('clean'))tl.play(0);});
+})();
+</script>
+</body>
+</html>
