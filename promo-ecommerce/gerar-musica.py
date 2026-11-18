@@ -1,5 +1,5 @@
 import numpy as np, wave
-SR=44100; DUR=30.0; N=int(SR*DUR); BPM=120; B=60/BPM
+SR=44100; DUR=31.0; N=int(SR*DUR); BPM=120; B=60/BPM
 L=np.zeros(N);R=np.zeros(N)
 rng=np.random.default_rng(7)
 def add(sig,t,pan=0.0,g=1.0):
@@ -55,9 +55,9 @@ arp_notes=[[440,523.25,659.25,523.25],[349.23,440,523.25,440],[523.25,659.25,784
 beats=int(DUR/B)
 for bi in range(beats):
     t=bi*B; bar=bi//4; ch=bar%4; inbar=bi%4
-    groove = t>=3.0
-    dropb  = (t>=10.5 and t<17.5) or t>=19.8
-    soft   = (t>=8.0 and t<10.5)
+    groove = t>=3.5
+    dropb  = (t>=12.85 and t<17.5) or t>=20.85
+    soft   = (t>=11.1 and t<12.85)
     # intro: arp suave
     for s in range(2):
         tt=t+s*B/2
@@ -83,28 +83,28 @@ for bi in range(beats):
 fin=int(5.0*SR)
 chord=sum(saw(f,fin,.006) for f in [220,261.63,329.63,440])/4
 chord=lp(chord,2200)*np.minimum(np.arange(fin)/SR/.02,1)*np.exp(-np.arange(fin)/SR*1.1)*.6
-add(chord,24.5,g=1.0)
+add(chord,24.8,g=1.0)
 # risers + impactos nas transições do vídeo
-for t0,d in [(2.4,.6),(7.3,.8),(10.0,.5),(17.1,.7),(19.1,.7),(23.8,.7)]:
+for t0,d in [(2.9,.6),(10.3,.8),(12.35,.5),(16.8,.7),(20.15,.7),(24.1,.7)]:
     x=noise_sweep(d,True,.45); add(x,t0,g=.9)
-for t0 in [3.0,8.1,10.6,17.8,19.8,24.5]:
+for t0 in [3.5,11.1,12.85,17.5,20.85,24.8]:
     add(impact(),t0,g=.85)
 # efeitos: moedas (19.8-24) tilintar
 for k in range(14):
-    f=1318.5*(1.5 if k%3==0 else 1.0); tt=19.9+k*.33
+    f=1318.5*(1.5 if k%3==0 else 1.0); tt=20.9+k*.3
     n=int(.35*SR);t=np.arange(n)/SR; s=(np.sin(2*np.pi*f*t)+.4*np.sin(2*np.pi*f*2.01*t))*np.exp(-t*14)*.14
     add(s,tt,pan=(-1)**k*.4)
 # clique do botão (14.45) e notificação (14.9)
-n=int(.08*SR);t=np.arange(n)/SR; add(np.sin(2*np.pi*1800*t)*np.exp(-t*60)*.4,14.45)
+n=int(.08*SR);t=np.arange(n)/SR; add(np.sin(2*np.pi*1800*t)*np.exp(-t*60)*.4,15.42)
 for i,f in enumerate([880,1318.5]):
-    n=int(.35*SR);t=np.arange(n)/SR; add(np.sin(2*np.pi*f*t)*np.exp(-t*9)*.3,14.9+i*.1)
+    n=int(.35*SR);t=np.arange(n)/SR; add(np.sin(2*np.pi*f*t)*np.exp(-t*9)*.3,15.75+i*.1)
 # master: sidechain leve + limiter + fades
 M=np.stack([L,R],1)
 sc=np.ones(N)
 if True:
     for bi in range(beats):
         t=bi*B
-        if t>=3.0 and not(8.0<=t<10.5):
+        if t>=3.5 and not(11.1<=t<12.85):
             i=int(t*SR);m=int(.18*SR);k=np.arange(min(m,N-i))/m
             sc[i:i+len(k)]*=1-0.45*(1-k)**2
 M*=sc[:,None]
@@ -112,6 +112,6 @@ M=np.tanh(M*1.3)/1.05
 fade=np.ones(N);fo=int(1.2*SR);fade[-fo:]=np.linspace(1,0,fo);fi=int(.05*SR);fade[:fi]=np.linspace(0,1,fi)
 M*=fade[:,None]*0.9
 pk=np.abs(M).max(); M=M/pk*.89
-with wave.open('/tmp/claude-0/audio/music.wav','wb') as w:
+with wave.open('/tmp/claude-0/audio/music2.wav','wb') as w:
     w.setnchannels(2);w.setsampwidth(2);w.setframerate(SR);w.writeframes((M*32767).astype('<i2').tobytes())
 print('ok',pk)
