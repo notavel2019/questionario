@@ -29,3 +29,19 @@ Você vende muito. Mas quanto fica? Concorrente do lado, comissão, frete, anún
 - **Voz:** use uma voz masculina ou feminina em pt-BR. Se for sua voz clonada, grave um áudio limpo de 30 a 60 segundos, sem música ao fundo.
 - **Música:** baixe o volume dela em 6 a 8 dB nos trechos em que a narração fala.
 - **Duração:** se alguma fala passar do tempo da cena, corte palavras (por exemplo, tire "com nome e contato") em vez de acelerar a voz.
+
+## Imagens para gerar no Canva (9:16, estilo flat pop 3D suave, fundo com grão fino)
+
+| Cena | Imagem | Prompt sugerido |
+|---|---|---|
+| 0–3 s | Caixa do marketplace | Caixa de papelão amarela com fita preta e etiqueta branca, flutuando sobre fundo creme claro, ilustração 3D suave, sem texto |
+| 3–8 s | Caixas de concorrentes | Seis caixas amarelas pequenas, vistas de cima, espalhadas sobre fundo azul-marinho escuro, 3D suave, sem texto |
+| 8–11 s | Caixa da sua marca | Caixa creme com fita laranja e etiqueta branca sobre degradê laranja, 3D suave, sem texto |
+| 11–18 s | Produto | Camiseta laranja de frente sobre degradê pêssego, 3D suave, sem texto (já gerada) |
+| 11–18 s | Cliente | Mulher brasileira sorrindo, segurando uma caixinha, fundo pêssego, retrato 3D suave (já gerada) |
+| 18–25 s | Moedas e margem | Moedas douradas com "R$" saindo de uma caixa aberta, fundo azul-marinho, 3D suave, sem texto |
+| 25–30 s | Fechamento | Caixa creme com fita laranja sobre fundo laranja, com espaço livre embaixo para o nome e o botão |
+
+Cenas 1, 2, 3 e 6 ainda não existem em alta resolução. A caixa laranja e a camiseta e a cliente já estão na pasta `assets/`.
+
+**Dica de montagem no Canva:** use o tamanho Story 1080×1920, uma página por cena, e a mesma paleta do vídeo: creme `#FFF4E6`, tinta `#111827`, laranja `#FF5A1F` e amarelo `#FFE600`. Fonte sugerida: Bricolage Grotesque.
