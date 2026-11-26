@@ -16,14 +16,16 @@ const AREA_ICONS = {
 } as const;
 
 const inputBase =
-  'w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-[15px] text-slate-100 placeholder:text-slate-500 transition focus:border-amber-400/60 focus:bg-white/[0.07] focus:outline-none focus:ring-4 focus:ring-amber-400/10 aria-[invalid=true]:border-rose-400/70';
+  'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 placeholder:text-slate-400 shadow-sm transition focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/15 aria-[invalid=true]:border-rose-400 aria-[invalid=true]:ring-rose-400/10';
+
+const card = 'rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.12)] sm:p-7';
 
 function Field({
   label,
   required,
   error,
-  children,
   hint,
+  children,
 }: {
   label: string;
   required?: boolean;
@@ -33,13 +35,13 @@ function Field({
 }) {
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-slate-200">
+      <label className="block text-sm font-medium text-slate-800">
         {label}
-        {required && <span className="ml-1 text-amber-400">*</span>}
+        {required && <span className="ml-1 text-amber-600">*</span>}
       </label>
       {children}
       {hint && !error && <p className="text-xs text-slate-500">{hint}</p>}
-      {error && <p className="text-xs text-rose-300">{error}</p>}
+      {error && <p className="text-xs font-medium text-rose-600">{error}</p>}
     </div>
   );
 }
@@ -71,47 +73,44 @@ export function PrayerForm() {
   const zelle = process.env.NEXT_PUBLIC_ZELLE_EMAIL ?? 'E-mail Zelle a configurar';
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#070d1a] text-slate-100">
-      {/* Ambient background */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 h-[520px] w-[720px] -translate-x-1/2 rounded-full bg-indigo-600/20 blur-[120px]" />
-        <div className="absolute bottom-0 right-0 h-[380px] w-[480px] rounded-full bg-amber-500/10 blur-[120px]" />
-      </div>
+    <div className="relative min-h-screen overflow-hidden bg-slate-50 text-slate-900">
+      {/* Soft background accents */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[460px] bg-gradient-to-b from-indigo-100/70 via-sky-50/40 to-transparent" />
 
       <div className="relative mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-16">
         {/* Hero */}
         <header className="text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-medium tracking-wide text-amber-300">
+          <span className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-white px-3 py-1 text-xs font-medium text-indigo-700 shadow-sm">
             <Sparkles className="h-3.5 w-3.5" /> Projeto de Vida 2027
           </span>
-          <h1 className="mt-5 text-3xl font-semibold tracking-tight sm:text-5xl">
-            O ano dos <span className="bg-gradient-to-r from-amber-200 to-amber-500 bg-clip-text text-transparent">inabaláveis</span>
+          <h1 className="mt-5 text-3xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+            O ano dos <span className="text-indigo-700">inabaláveis</span>
           </h1>
-          <blockquote className="mx-auto mt-6 max-w-xl border-l-0 text-slate-300">
-            <p className="text-[15px] leading-relaxed">
+          <blockquote className="mx-auto mt-6 max-w-xl">
+            <p className="text-[15px] leading-relaxed text-slate-600">
               “Deus é o nosso refúgio e fortaleza, socorro bem-presente na angústia. Portanto, não temeremos, ainda que a terra se transtorne…”
             </p>
             <footer className="mt-2 text-xs text-slate-500">Salmos 46:1–2</footer>
           </blockquote>
-          <p className="mt-6 font-medium text-amber-200">Ainda que tudo estremeça, permaneceremos de pé!</p>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-400">
+          <p className="mt-6 font-semibold text-amber-700">Ainda que tudo estremeça, permaneceremos de pé!</p>
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-600">
             Apresente seus sonhos, projetos e pedidos de oração para 2027. Preencha somente as áreas que desejar. Seus pedidos serão
             apresentados em oração ao Senhor ao longo de 365 dias.
           </p>
         </header>
 
         {done ? (
-          <section className="mt-12 rounded-2xl border border-white/10 bg-white/[0.04] p-8 text-center shadow-2xl backdrop-blur">
-            <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-400" />
-            <h2 className="mt-4 text-2xl font-semibold">Pedidos recebidos!</h2>
-            <p className="mt-3 text-slate-400">Seus pedidos serão apresentados em oração ao Senhor ao longo de 2027. Que Deus abençoe sua vida e sua família!</p>
-            <p className="mt-6 text-sm text-slate-500">Profeta Stela Wilbert</p>
+          <section className={`mt-12 text-center ${card}`}>
+            <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-500" />
+            <h2 className="mt-4 text-2xl font-semibold text-slate-900">Pedidos recebidos!</h2>
+            <p className="mt-3 text-slate-600">Seus pedidos serão apresentados em oração ao Senhor ao longo de 2027. Que Deus abençoe sua vida e sua família!</p>
+            <p className="mt-6 text-sm font-medium text-slate-500">Profeta Stela Wilbert</p>
           </section>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="mt-12 space-y-6">
             {/* Identification */}
-            <section className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-2xl backdrop-blur sm:p-7">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-400">Seus dados</h2>
+            <section className={`space-y-5 ${card}`}>
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-500">Seus dados</h2>
               <Field label="Qual é o seu WhatsApp com código do país e DDD?" required error={errors.whatsapp?.message}>
                 <input
                   {...register('whatsapp')}
@@ -128,37 +127,40 @@ export function PrayerForm() {
             </section>
 
             {/* Areas */}
-            <section className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-2xl backdrop-blur sm:p-7">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-400">Suas áreas de vida</h2>
+            <section className={`space-y-5 ${card}`}>
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-500">Suas áreas de vida</h2>
               {AREAS.map((area) => {
                 const Icon = AREA_ICONS[area.key];
                 return (
                   <Field key={area.key} label={area.label} error={errors[area.key]?.message}>
                     <div className="flex items-start gap-3">
-                      <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-400/10 text-amber-300">
+                      <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-700">
                         <Icon className="h-4 w-4" />
                       </span>
-                      <textarea
-                        {...register(area.key)}
-                        rows={3}
-                        placeholder={area.prompt}
-                        className={`${inputBase} resize-y`}
-                      />
+                      <textarea {...register(area.key)} rows={3} placeholder={area.prompt} className={`${inputBase} resize-y`} />
                     </div>
                   </Field>
                 );
               })}
-              <Field label="Pedidos especiais" hint="Algum outro sonho, propósito ou pedido de oração para apresentar ao Senhor em 2027?" error={errors.especiais?.message}>
+              <Field
+                label="Pedidos especiais"
+                hint="Algum outro sonho, propósito ou pedido de oração para apresentar ao Senhor em 2027?"
+                error={errors.especiais?.message}
+              >
                 <textarea {...register('especiais')} rows={4} placeholder="Escreva aqui…" className={`${inputBase} resize-y`} />
               </Field>
             </section>
 
-            {serverError && <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">{serverError}</p>}
+            {serverError && (
+              <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                {serverError}
+              </p>
+            )}
 
             <button
               type="submit"
               disabled={pending}
-              className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-300 to-amber-500 px-6 py-4 text-sm font-semibold uppercase tracking-wide text-slate-950 shadow-lg shadow-amber-500/20 transition hover:brightness-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400/40 disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-700 px-6 py-4 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-indigo-700/20 transition hover:bg-indigo-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/30 disabled:opacity-60"
             >
               {pending && <Loader2 className="h-4 w-4 animate-spin" />}
               Enviar meus pedidos
@@ -167,11 +169,11 @@ export function PrayerForm() {
         )}
 
         {/* Voluntary offering */}
-        <section className="mt-12 rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-center sm:p-8">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-400">Uma semente de amor à obra de Deus</h2>
-          <p className="mt-3 font-medium text-amber-200">“Deus ama ao que dá com alegria.”</p>
+        <section className={`mt-12 text-center ${card}`}>
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-500">Uma semente de amor à obra de Deus</h2>
+          <p className="mt-3 font-semibold text-amber-700">“Deus ama ao que dá com alegria.”</p>
           <p className="text-xs text-slate-500">2 Coríntios 9:7</p>
-          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-slate-400">
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-slate-600">
             A oferta é totalmente voluntária e não condiciona sua participação nem seus pedidos de oração.
           </p>
           <div className="mt-6 grid gap-3 text-left sm:grid-cols-2">
@@ -181,7 +183,7 @@ export function PrayerForm() {
           <p className="mt-6 text-xs text-slate-500">Independentemente da oferta, seus pedidos serão recebidos e apresentados em oração.</p>
         </section>
 
-        <footer className="mt-10 text-center text-xs text-slate-600">Profeta Stela Wilbert</footer>
+        <footer className="mt-10 text-center text-xs text-slate-500">Profeta Stela Wilbert</footer>
       </div>
     </div>
   );
@@ -190,12 +192,12 @@ export function PrayerForm() {
 function OfferCard({ flag, title, value }: { flag: string; title: string; value: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
-      <p className="text-xs font-medium text-slate-400">
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+      <p className="text-xs font-medium text-slate-500">
         {flag} {title}
       </p>
       <div className="mt-2 flex items-center justify-between gap-2">
-        <code className="truncate text-sm text-slate-100">{value}</code>
+        <code className="truncate text-sm text-slate-800">{value}</code>
         <button
           type="button"
           onClick={async () => {
@@ -207,10 +209,10 @@ function OfferCard({ flag, title, value }: { flag: string; title: string; value:
               /* clipboard indisponível: o valor continua visível */
             }
           }}
-          className="shrink-0 rounded-lg border border-white/10 p-2 text-slate-300 transition hover:bg-white/10"
+          className="shrink-0 rounded-lg border border-slate-200 bg-white p-2 text-slate-600 transition hover:bg-slate-100"
           aria-label={`Copiar ${title}`}
         >
-          {copied ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+          {copied ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
         </button>
       </div>
     </div>
