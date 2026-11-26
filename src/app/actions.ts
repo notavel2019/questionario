@@ -1,73 +1,19 @@
 'use server';
 
-import { z } from 'zod';
+import { prayerSchema, type PrayerValues } from '@/lib/prayer-schema';
 
-const formSchema = z.object({
-  companyName: z.string(),
-  city: z.string(),
-  clients: z.string(),
-  needs: z.string(),
-  unique: z.string(),
-  benefits: z.string(),
-  visualId: z.string(),
-  services: z.string(),
-  pricing: z.string(),
-  social: z.string(),
-  scheduling: z.string(),
-  referenceSite: z.string().optional(),
-});
+export type SubmitResult = { ok: true } | { ok: false; error: string };
 
-type FormValues = z.infer<typeof formSchema>;
-
-export async function generateWhatsAppMessage(values: FormValues) {
-  try {
-    const validatedData = formSchema.parse(values);
-
-    const message = `
-*📝 Novo Briefing de Projeto Web 📝*
-
-*Empresa e Atividade:*
-${validatedData.companyName}
-
-*Localização:*
-${validatedData.city}
-
-*Principais Clientes:*
-${validatedData.clients}
-
-*Necessidades Atendidas:*
-${validatedData.needs}
-
-*Diferenciais:*
-${validatedData.unique}
-
-*Principais Benefícios:*
-${validatedData.benefits}
-
-*Identidade Visual:*
-${validatedData.visualId}
-
-*Produtos/Serviços:*
-${validatedData.services}
-
-*Preços e Pagamento:*
-${validatedData.pricing}
-
-*Redes Sociais/Site:*
-${validatedData.social}
-
-*Ferramenta de Agendamento:*
-${validatedData.scheduling}
-
-*Site de Referência:*
-${validatedData.referenceSite || 'Nenhum'}
-    `.trim();
-
-    return { success: true, message };
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { success: false, message: 'Erro de validação nos dados do formulário.' };
-    }
-    return { success: false, message: 'Ocorreu um erro ao gerar a mensagem.' };
+/**
+ * Recebe os pedidos de oração. Valida no servidor (nunca confie só no cliente).
+ * TODO: encaminhar `data` para o destino real (e-mail, planilha, banco ou webhook).
+ */
+export async function submitPrayerRequest(input: unknown): Promise<SubmitResult> {
+  const parsed = prayerSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: 'Revise os campos destacados e tente novamente.' };
   }
+  const data: PrayerValues = parsed.data;
+  console.info('[prayer-request] nova submissão recebida', { areas: Object.keys(data).filter((k) => data[k as keyof PrayerValues]) });
+  return { ok: true };
 }
